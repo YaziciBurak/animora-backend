@@ -1,5 +1,6 @@
 package com.animora.anime.entity;
 
+import com.animora.season.entity.Season;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -32,8 +33,9 @@ public class Anime {
 
     private String coverImage;
 
+
     @OneToMany(mappedBy = "anime", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<com.animora.season.entity.Season> seasons = new ArrayList<>();
+    private List<Season> seasons = new ArrayList<>();
 
     @OneToMany(mappedBy = "anime", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<AnimeGenre> genres = new ArrayList<>();
