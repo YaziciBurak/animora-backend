@@ -1,11 +1,9 @@
 package com.animora.season.entity;
 
 import com.animora.anime.entity.Anime;
+import com.animora.episode.entity.Episode;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@Builder
 @Table(name = "season")
 public class Season {
 
@@ -30,5 +29,5 @@ public class Season {
     private Anime anime;
 
     @OneToMany(mappedBy = "season", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<com.animora.episode.entity.Episode> episodes = new ArrayList<>();
+    private List<Episode> episodes = new ArrayList<>();
 }
