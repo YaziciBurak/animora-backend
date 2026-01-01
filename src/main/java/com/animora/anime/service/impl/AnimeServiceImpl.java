@@ -6,6 +6,8 @@ import com.animora.anime.entity.Anime;
 import com.animora.anime.mapper.AnimeMapper;
 import com.animora.anime.repository.AnimeRepository;
 import com.animora.anime.service.AnimeService;
+import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +15,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class AnimeServiceImpl implements AnimeService {
 
     private final AnimeRepository animeRepository;
@@ -58,9 +61,8 @@ public class AnimeServiceImpl implements AnimeService {
 
     @Override
     public void deleteAnime(Long id) {
-        if (!animeRepository.existsById(id)) {
-            throw new RuntimeException("Not found: " +id);
-        }
-        animeRepository.deleteById(id);
+        Anime anime = animeRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Anime not found: " + id));
+        animeRepository.delete(anime);
     }
 }
