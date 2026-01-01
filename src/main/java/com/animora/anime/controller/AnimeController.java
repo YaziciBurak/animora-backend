@@ -5,6 +5,7 @@ import com.animora.anime.dto.AnimeResponse;
 import com.animora.anime.service.AnimeService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,7 +21,7 @@ public class AnimeController {
     @PostMapping
     public ResponseEntity<AnimeResponse> createAnime(@Valid @RequestBody AnimeRequest request) {
         AnimeResponse response = animeService.createAnime(request);
-        return ResponseEntity.ok(response);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @GetMapping("/{id}")
@@ -37,7 +38,7 @@ public class AnimeController {
 
     @PutMapping("/{id}")
     public ResponseEntity<AnimeResponse> updateAnime(
-            @PathVariable Long id, @RequestBody AnimeRequest request) {
+            @PathVariable Long id,@Valid @RequestBody AnimeRequest request) {
         AnimeResponse response = animeService.updateAnime(id, request);
         return ResponseEntity.ok(response);
     }
