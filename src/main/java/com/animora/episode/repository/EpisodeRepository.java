@@ -9,4 +9,6 @@ import java.util.List;
 public interface EpisodeRepository extends JpaRepository<Episode, Long> {
 
     List<Episode> findBySeason(Season season);
+
+    boolean existsBySeasonIdAndEpisodeNumber(Long seasonId, int episodeNumber);
 }

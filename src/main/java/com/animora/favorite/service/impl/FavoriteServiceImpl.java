@@ -9,24 +9,20 @@ import com.animora.user.entity.User;
 import com.animora.user.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 @Transactional
 public class FavoriteServiceImpl implements FavoriteService {
 
     private final FavoriteRepository favoriteRepository;
     private final UserRepository userRepository;
     private final AnimeRepository animeRepository;
-
-    public FavoriteServiceImpl(FavoriteRepository favoriteRepository, UserRepository userRepository, AnimeRepository animeRepository) {
-        this.favoriteRepository = favoriteRepository;
-        this.userRepository = userRepository;
-        this.animeRepository = animeRepository;
-    }
 
     @Override
     public Favorite addToFavorites(Long userId, Long animeId) {
