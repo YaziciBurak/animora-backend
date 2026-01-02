@@ -9,26 +9,20 @@ import com.animora.user.entity.User;
 import com.animora.user.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 @Transactional
 public class CommentServiceImpl implements CommentService {
 
     private final CommentRepository commentRepository;
     private final AnimeRepository animeRepository;
     private final UserRepository userRepository;
-
-    public CommentServiceImpl(CommentRepository commentRepository,
-                              AnimeRepository animeRepository,
-                              UserRepository userRepository) {
-        this.commentRepository = commentRepository;
-        this.animeRepository = animeRepository;
-        this.userRepository = userRepository;
-    }
 
     @Override
     public Comment addComment(Long animeId, Long userId, String content) {

@@ -5,6 +5,7 @@ import com.animora.genre.dto.GenreResponse;
 import com.animora.genre.entity.Genre;
 import com.animora.genre.repository.GenreRepository;
 import com.animora.genre.service.GenreService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +14,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class GenreServiceImpl implements GenreService {
 
     private final GenreRepository genreRepository;

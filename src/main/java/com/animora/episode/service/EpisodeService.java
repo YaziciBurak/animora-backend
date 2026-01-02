@@ -1,12 +1,13 @@
 package com.animora.episode.service;
 
-import com.animora.episode.entity.Episode;
+import com.animora.episode.dto.EpisodeRequest;
+import com.animora.episode.dto.EpisodeResponse;
 
 import java.util.List;
 
 public interface EpisodeService {
 
-    Episode createEpisode(Long seasonId, Episode episode);
+    EpisodeResponse addEpisodeToSeason(Long seasonId, EpisodeRequest request);
 
-    List<Episode> getEpisodesBySeasonId(Long seasonId);
+    List<EpisodeResponse> getEpisodesBySeasonId(Long seasonId);
 }
