@@ -1,12 +1,15 @@
 package com.animora.comment.service;
 
-import com.animora.comment.entity.Comment;
+import com.animora.comment.dto.CommentRequest;
+import com.animora.comment.dto.CommentResponse;
 
 import java.util.List;
 
 public interface CommentService {
 
-    Comment addComment(Long animeId, Long userId, String content);
+    CommentResponse createComment(Long animeId, Long userId, CommentRequest request);
 
-    List<Comment> getCommentsByAnimeId(Long animeId);
+    List<CommentResponse> getCommentsByAnime(Long animeId);
+
+    void deleteComment(Long commentId);
 }

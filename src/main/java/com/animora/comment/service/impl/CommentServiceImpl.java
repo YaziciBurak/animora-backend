@@ -2,17 +2,19 @@ package com.animora.comment.service.impl;
 
 import com.animora.anime.entity.Anime;
 import com.animora.anime.repository.AnimeRepository;
+import com.animora.comment.dto.CommentRequest;
+import com.animora.comment.dto.CommentResponse;
 import com.animora.comment.entity.Comment;
+import com.animora.comment.mapper.CommentMapper;
 import com.animora.comment.repository.CommentRepository;
 import com.animora.comment.service.CommentService;
 import com.animora.user.entity.User;
 import com.animora.user.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -23,30 +25,46 @@ public class CommentServiceImpl implements CommentService {
     private final CommentRepository commentRepository;
     private final AnimeRepository animeRepository;
     private final UserRepository userRepository;
+    private final CommentMapper commentMapper;
+
 
     @Override
-    public Comment addComment(Long animeId, Long userId, String content) {
+    public CommentResponse createComment(Long animeId, Long userId, CommentRequest request) {
+
         Anime anime = animeRepository.findById(animeId)
                 .orElseThrow(() -> new EntityNotFoundException("Anime not found"));
 
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException("User not found"));
 
-        Comment comment = Comment.builder()
-                .anime(anime)
-                .user(user)
-                .content(content)
-                .createdAt(LocalDate.now())
-                .build();
+        Comment comment = commentMapper.toEntity(request, anime, user);
 
-        return commentRepository.save(comment);
+        Comment saved = commentRepository.save(comment);
+
+        return commentMapper.toResponse(saved);
     }
 
     @Override
-    public List<Comment> getCommentsByAnimeId(Long animeId) {
+    @Transactional(readOnly = true)
+    public List<CommentResponse> getCommentsByAnime(Long animeId) {
+
         Anime anime = animeRepository.findById(animeId)
                 .orElseThrow(() -> new EntityNotFoundException("Anime not found"));
 
-        return commentRepository.findByAnime(anime);
+        return commentRepository.findByAnime(anime)
+                .stream()
+                .map(commentMapper::toResponse)
+                .toList();
     }
+
+    @Override
+    public void deleteComment(Long commentId) {
+
+        if (!commentRepository.existsById(commentId)) {
+            throw new EntityNotFoundException("Comment not found");
+        }
+
+        commentRepository.deleteById(commentId);
+    }
+
 }
