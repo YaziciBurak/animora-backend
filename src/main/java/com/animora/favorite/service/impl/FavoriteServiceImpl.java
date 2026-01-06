@@ -2,15 +2,17 @@ package com.animora.favorite.service.impl;
 
 import com.animora.anime.entity.Anime;
 import com.animora.anime.repository.AnimeRepository;
+import com.animora.favorite.dto.FavoriteResponse;
 import com.animora.favorite.entity.Favorite;
+import com.animora.favorite.mapper.FavoriteMapper;
 import com.animora.favorite.repository.FavoriteRepository;
 import com.animora.favorite.service.FavoriteService;
 import com.animora.user.entity.User;
 import com.animora.user.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -23,18 +25,21 @@ public class FavoriteServiceImpl implements FavoriteService {
     private final FavoriteRepository favoriteRepository;
     private final UserRepository userRepository;
     private final AnimeRepository animeRepository;
+    private final FavoriteMapper favoriteMapper;
+
 
     @Override
-    public Favorite addToFavorites(Long userId, Long animeId) {
-        if (favoriteRepository.existsByUserIdAndAnimeId(userId, animeId)) {
-            throw new IllegalStateException("Anime already in favorites");
-        }
+    public FavoriteResponse addFavorite(Long userId, Long animeId) {
 
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException("User not found"));
 
         Anime anime = animeRepository.findById(animeId)
-                .orElseThrow(() -> new EntityNotFoundException("Anime not fond"));
+                .orElseThrow(() -> new EntityNotFoundException("Anime not found"));
+
+        if(favoriteRepository.existsByUserAndAnime(user, anime)) {
+            throw new IllegalStateException("Anime already in favorites");
+        }
 
         Favorite favorite = Favorite.builder()
                 .user(user)
@@ -42,22 +47,36 @@ public class FavoriteServiceImpl implements FavoriteService {
                 .createdAt(LocalDate.now())
                 .build();
 
-        return favoriteRepository.save(favorite);
+        Favorite saved = favoriteRepository.save(favorite);
+
+        return favoriteMapper.toResponse(saved);
     }
 
     @Override
-    public void removeFromFavorites(Long userId, Long animeId) {
-        Favorite favorite = favoriteRepository.findByUserIdAndAnimeId(userId, animeId)
+    public void removeFavorite(Long userId, Long animeId) {
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("User not found"));
+
+        Anime anime = animeRepository.findById(animeId)
+                .orElseThrow(() -> new EntityNotFoundException("Anime not found"));
+
+        Favorite favorite = favoriteRepository.findByUserAndAnime(user, anime)
                 .orElseThrow(() -> new EntityNotFoundException("Favorite not found"));
 
         favoriteRepository.delete(favorite);
     }
 
     @Override
-    public List<Favorite> getUserFavorites(Long userId) {
+    @Transactional(readOnly = true)
+    public List<FavoriteResponse> getUserFavorites(Long userId) {
+
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException("User not found"));
 
-        return favoriteRepository.findByUser(user);
+        return favoriteRepository.findByUser(user)
+                .stream()
+                .map(favoriteMapper::toResponse)
+                .toList();
     }
 }

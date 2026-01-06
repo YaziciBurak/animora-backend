@@ -1,5 +1,6 @@
 package com.animora.favorite.repository;
 
+import com.animora.anime.entity.Anime;
 import com.animora.favorite.entity.Favorite;
 import com.animora.user.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -9,9 +10,9 @@ import java.util.Optional;
 
 public interface FavoriteRepository extends JpaRepository<Favorite, Long> {
 
-    boolean existsByUserIdAndAnimeId(Long userId, Long animeId);
+    boolean existsByUserAndAnime(User user, Anime anime);
 
-    Optional<Favorite> findByUserIdAndAnimeId(Long userId, Long animeId);
+    Optional<Favorite> findByUserAndAnime(User user, Anime anime);
 
     List<Favorite> findByUser(User user);
 }
