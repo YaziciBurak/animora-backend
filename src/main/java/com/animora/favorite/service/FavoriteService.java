@@ -1,14 +1,14 @@
 package com.animora.favorite.service;
 
-import com.animora.favorite.entity.Favorite;
+import com.animora.favorite.dto.FavoriteResponse;
 
 import java.util.List;
 
 public interface FavoriteService {
 
-    Favorite addToFavorites(Long userId, Long animeId);
+    FavoriteResponse addFavorite(Long userId, Long animeId);
 
-    void removeFromFavorites(Long userId, Long animeId);
+    void removeFavorite(Long userId, Long animeId);
 
-    List<Favorite> getUserFavorites(Long userId);
+    List<FavoriteResponse> getUserFavorites(Long userId);
 }
