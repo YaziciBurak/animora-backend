@@ -48,10 +48,11 @@ public class CommentServiceImpl implements CommentService {
     @Transactional(readOnly = true)
     public List<CommentResponse> getCommentsByAnime(Long animeId) {
 
-        Anime anime = animeRepository.findById(animeId)
-                .orElseThrow(() -> new EntityNotFoundException("Anime not found"));
+        if (!animeRepository.existsById(animeId)) {
+            throw new EntityNotFoundException("Anime not found");
+        }
 
-        return commentRepository.findByAnime(anime)
+        return commentRepository.findByAnimeId(animeId)
                 .stream()
                 .map(commentMapper::toResponse)
                 .toList();
@@ -60,11 +61,10 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public void deleteComment(Long commentId) {
 
-        if (!commentRepository.existsById(commentId)) {
-            throw new EntityNotFoundException("Comment not found");
-        }
+        Comment comment = commentRepository.findById(commentId)
+                        .orElseThrow(() -> new EntityNotFoundException("Comment not found"));
 
-        commentRepository.deleteById(commentId);
+        commentRepository.delete(comment);
     }
 
 }

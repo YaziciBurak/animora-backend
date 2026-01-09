@@ -11,14 +11,14 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/animes")
 @RequiredArgsConstructor
 public class CommentController {
 
     private final CommentService commentService;
 
-    @PostMapping("/animes/{animeId}/comments")
-    public ResponseEntity<CommentResponse>createComment(
+    @PostMapping("/{animeId}/comments")
+    public ResponseEntity<CommentResponse> createComment(
             @PathVariable Long animeId,
             @RequestParam Long userId,
             @Valid @RequestBody CommentRequest request
@@ -28,7 +28,7 @@ public class CommentController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/animes/{animeId}/comments")
+    @GetMapping("/{animeId}/comments")
     public ResponseEntity<List<CommentResponse>> getCommentsByAnime(
             @PathVariable Long animeId
     ) {
