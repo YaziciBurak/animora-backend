@@ -1,4 +1,4 @@
-package com.animora.common.security.jwt;
+package com.animora.security.jwt;
 
 public class JwtAuthenticationEntryPoint {
 }

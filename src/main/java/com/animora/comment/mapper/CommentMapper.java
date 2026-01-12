@@ -23,7 +23,7 @@ public class CommentMapper {
                 .id(comment.getId())
                 .content(comment.getContent())
                 .userId(comment.getUser().getId())
-                .userName(comment.getUser().getUserName())
+                .userName(comment.getUser().getUsername())
                 .build();
     }
 }
