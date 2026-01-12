@@ -1,10 +1,10 @@
-package com.animora.common.security.util;
+package com.animora.security.context;
 
 import io.jsonwebtoken.Claims;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
-public class SecurityUtil {
+public class SecurityContextUtil {
 
     public static Long getCurrentUserId() {
         Authentication authentication =

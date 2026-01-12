@@ -1,4 +1,4 @@
-package com.animora.common.security.service;
+package com.animora.security.userdetails;
 
 import com.animora.user.entity.User;
 import com.animora.user.repository.UserRepository;

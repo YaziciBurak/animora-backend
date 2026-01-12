@@ -1,7 +1,6 @@
-package com.animora.common.security.jwt;
+package com.animora.security.jwt;
 
-import com.animora.common.security.service.CustomUserDetailsService;
-import io.jsonwebtoken.Claims;
+import com.animora.security.userdetails.CustomUserDetailsService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -19,7 +18,7 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-    private final JwtTokenProvider tokenProvider;
+    private final JwtService jwtService;
     private final CustomUserDetailsService userDetailsService;
 
     @Override
@@ -34,9 +33,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         if (header != null && header.startsWith("Bearer")) {
             String token = header.substring(7);
 
-            if (tokenProvider.validateToken(token)) {
-                Claims claims = tokenProvider.getClaims(token);
-                String email = claims.getSubject();
+            if (jwtService.isTokenValid(token)
+                    && SecurityContextHolder.getContext().getAuthentication() == null) {
+
+                String email = jwtService.extractEmail(token);
 
                 UserDetails userDetails = userDetailsService.loadUserByUsername(email);
 
