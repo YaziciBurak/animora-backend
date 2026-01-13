@@ -1,4 +1,4 @@
-package com.animora.security.auth.dto;
+package com.animora.security.auth.dto.request;
 
 
 import jakarta.validation.constraints.Email;

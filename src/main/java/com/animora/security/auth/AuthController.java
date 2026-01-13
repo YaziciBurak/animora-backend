@@ -1,7 +1,9 @@
 package com.animora.security.auth;
 
-import com.animora.security.auth.dto.LoginRequest;
-import com.animora.security.auth.dto.LoginResponse;
+import com.animora.security.auth.dto.request.LoginRequest;
+import com.animora.security.auth.dto.request.RegisterRequest;
+import com.animora.security.auth.dto.response.LoginResponse;
+import com.animora.security.auth.dto.response.RegisterResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -20,5 +22,10 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest request) {
         return ResponseEntity.ok(authService.login(request));
+    }
+
+    @PostMapping("/register")
+    public ResponseEntity<RegisterResponse> register(@Valid @RequestBody RegisterRequest request) {
+        return ResponseEntity.ok(authService.register(request));
     }
 }
