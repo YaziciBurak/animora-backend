@@ -1,6 +1,6 @@
 package com.animora.user.entity;
 
-import com.animora.model.enums.Role;
+import com.animora.domain.enums.Role;
 import jakarta.persistence.*;
 import lombok.*;
 

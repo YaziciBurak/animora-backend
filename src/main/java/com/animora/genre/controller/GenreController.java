@@ -7,6 +7,7 @@ import com.animora.genre.service.GenreService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,6 +20,7 @@ public class GenreController {
     private final GenreService genreService;
 
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<GenreResponse> createGenre(@Valid @RequestBody GenreRequest request) {
         return ResponseEntity.ok(genreService.createGenre(request));
     }
@@ -29,6 +31,7 @@ public class GenreController {
     }
 
     @GetMapping
+    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<List<GenreResponse>> getAllGenres() {
         return ResponseEntity.ok(genreService.getAllGenres());
     }

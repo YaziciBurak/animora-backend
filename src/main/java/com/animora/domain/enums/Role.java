@@ -1,4 +1,4 @@
-package com.animora.model.enums;
+package com.animora.domain.enums;
 
 public enum Role {
     USER,
