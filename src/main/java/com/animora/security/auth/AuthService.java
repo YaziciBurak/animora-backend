@@ -1,7 +1,7 @@
 package com.animora.security.auth;
 
 
-import com.animora.model.enums.Role;
+import com.animora.domain.enums.Role;
 import com.animora.security.auth.dto.request.LoginRequest;
 import com.animora.security.auth.dto.request.RegisterRequest;
 import com.animora.security.auth.dto.response.LoginResponse;
@@ -44,7 +44,7 @@ public class AuthService {
         User user = userRepository.findByEmail(request.email())
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
-        String token = jwtService.generateToken(user.getId(), user.getEmail());
+        String token = jwtService.generateToken(user);
 
         return new LoginResponse(token);
     }
@@ -69,7 +69,7 @@ public class AuthService {
 
         userRepository.save(user);
 
-        String token = jwtService.generateToken(user.getId(), user.getEmail());
+        String token = jwtService.generateToken(user);
 
         return new RegisterResponse(token);
      }
