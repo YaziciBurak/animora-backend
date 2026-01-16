@@ -1,7 +1,7 @@
 package com.animora.security.auth;
 
-
-import com.animora.domain.enums.Role;
+import com.animora.domain.entiy.Role;
+import com.animora.domain.repository.RoleRepository;
 import com.animora.security.auth.dto.request.LoginRequest;
 import com.animora.security.auth.dto.request.RegisterRequest;
 import com.animora.security.auth.dto.response.LoginResponse;
@@ -28,6 +28,7 @@ public class AuthService {
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
     private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
 
     public LoginResponse login(LoginRequest request) {
@@ -59,12 +60,15 @@ public class AuthService {
             throw new RuntimeException("Username already in use");
         }
 
+        Role userRole = roleRepository.findByName("ROLE_USER")
+                .orElseThrow(() -> new RuntimeException("ROLE_USER not found"));
+
         User user = User.builder()
                 .username(request.username())
                 .email(request.email())
                 .password(passwordEncoder.encode(request.password()))
                 .createdAt(LocalDateTime.now())
-                .roles(Set.of(Role.USER))
+                .roles(Set.of(userRole))
                 .build();
 
         userRepository.save(user);

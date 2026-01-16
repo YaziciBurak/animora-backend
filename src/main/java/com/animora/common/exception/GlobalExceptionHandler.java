@@ -9,51 +9,11 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import javax.naming.AuthenticationException;
-import java.nio.file.AccessDeniedException;
 import java.time.LocalDateTime;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(AccessDeniedException.class)
-    public ResponseEntity<ErrorResponse> handleAccessDenied(AccessDeniedException ex,
-                                                            HttpServletRequest request) {
-        return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                .body(ErrorResponse.builder()
-                        .status(HttpStatus.FORBIDDEN.value())
-                        .error("FORBIDDEN")
-                        .message("You do not have permission to perform this action")
-                        .path(request.getRequestURI())
-                        .timeStamp(LocalDateTime.now())
-                        .build());
-    }
-
-    @ExceptionHandler(AuthenticationException.class)
-    public ResponseEntity<ErrorResponse> handleAuthentication(AuthenticationException ex,
-                                                              HttpServletRequest request) {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                .body(ErrorResponse.builder()
-                        .status(HttpStatus.UNAUTHORIZED.value())
-                        .error("UNAUTHORIZED")
-                        .message("Authentication is required")
-                        .path(request.getRequestURI())
-                        .timeStamp(LocalDateTime.now())
-                        .build());
-    }
-
-
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorResponse> handleGenericException(Exception ex, HttpServletRequest request) {
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(ErrorResponse.builder()
-                        .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
-                        .error("INTERNAL_SERVER_ERROR")
-                        .message("Unexpected error occurred")
-                        .path(request.getRequestURI())
-                        .timeStamp(LocalDateTime.now())
-                        .build());
-    }
 
     @ExceptionHandler(EntityNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleEntityNotFound(EntityNotFoundException ex,
