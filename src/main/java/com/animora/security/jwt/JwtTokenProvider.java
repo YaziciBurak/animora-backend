@@ -1,6 +1,7 @@
 package com.animora.security.jwt;
 
-import com.animora.domain.enums.Role;
+import com.animora.domain.entiy.Role;
+import com.animora.user.entity.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -11,7 +12,6 @@ import org.springframework.stereotype.Component;
 import java.security.Key;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 @Component
 public class JwtTokenProvider {
@@ -26,16 +26,17 @@ public class JwtTokenProvider {
         return Keys.hmacShaKeyFor(jwtSecret.getBytes());
     }
 
-    public String generateToken(Long userId, String email, Set<Role> roles) {
+    public String generateToken(User user) {
 
-        List<String> roleClaims = roles.stream()
-                .map(role -> "ROLE_" + role.name())
+        List<String> roles = user.getRoles()
+                .stream()
+                .map(Role::getName)
                 .toList();
 
         return Jwts.builder()
-                .setSubject(email)
-                .claim("userId", userId)
-                .claim("roles", roleClaims)
+                .setSubject(user.getEmail())
+                .claim("userId", user.getId())
+                .claim("roles", roles)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + jwtExpirationMs))
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256)

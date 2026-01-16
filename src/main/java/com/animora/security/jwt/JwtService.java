@@ -16,11 +16,7 @@ public class JwtService {
     private final JwtTokenProvider tokenProvider;
 
     public String generateToken(User user) {
-        return tokenProvider.generateToken(
-                user.getId(),
-                user.getEmail(),
-                user.getRoles()
-        );
+        return tokenProvider.generateToken(user);
     }
 
     public boolean isTokenValid(String token) {

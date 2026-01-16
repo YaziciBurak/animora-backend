@@ -1,6 +1,6 @@
 package com.animora.user.entity;
 
-import com.animora.domain.enums.Role;
+import com.animora.domain.entiy.Role;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -32,9 +32,11 @@ public class User {
 
     private LocalDateTime createdAt;
 
-    @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"))
-    @Column(name = "role")
-    @Enumerated(EnumType.STRING)
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "user_roles",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id")
+    )
     private Set<Role> roles = new HashSet<>();
 }
