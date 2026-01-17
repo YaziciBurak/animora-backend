@@ -1,13 +1,16 @@
 package com.animora.season.service;
 
-import com.animora.anime.entity.Anime;
-import com.animora.season.entity.Season;
+import com.animora.season.dto.SeasonRequest;
+import com.animora.season.dto.SeasonResponse;
+
 
 import java.util.List;
 
 public interface SeasonService {
 
-    Season createSeason(Anime anime, int seasonNumber);
+    SeasonResponse createSeason(Long animeId, SeasonRequest request);
 
-    List<Season> getSeasonsByAnimeId(Long animeId);
+    List<SeasonResponse> getSeasonsByAnimeId(Long animeId);
+
+    void deleteSeason(Long animeId, Long seasonId);
 }

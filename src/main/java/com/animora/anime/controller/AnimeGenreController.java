@@ -15,9 +15,9 @@ public class AnimeGenreController {
     private final AnimeGenreService animeGenreService;
 
     @PostMapping("/{animeId}/genres")
-    public ResponseEntity<Void> addGenresToAnime(@PathVariable Long animeId,
+    public ResponseEntity<Void> createGenresToAnime(@PathVariable Long animeId,
                                                  @RequestBody @Valid AnimeGenreRequest request) {
-        animeGenreService.addGenresToAnime(animeId, request.getGenreIds());
+        animeGenreService.createGenresToAnime(animeId, request.getGenreIds());
         return ResponseEntity.noContent().build();
     }
 }

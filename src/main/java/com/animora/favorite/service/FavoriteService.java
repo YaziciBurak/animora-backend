@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface FavoriteService {
 
-    FavoriteResponse addFavorite(Long userId, Long animeId);
+    FavoriteResponse createFavorite(Long userId, Long animeId);
 
     void removeFavorite(Long userId, Long animeId);
 

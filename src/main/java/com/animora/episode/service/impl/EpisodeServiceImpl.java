@@ -25,7 +25,7 @@ public class EpisodeServiceImpl implements EpisodeService {
     private final EpisodeMapper episodeMapper;
 
     @Override
-    public EpisodeResponse addEpisodeToSeason(Long seasonId, EpisodeRequest request) {
+    public EpisodeResponse createEpisodeToSeason(Long seasonId, EpisodeRequest request) {
 
         Season season = seasonRepository.findById(seasonId)
                 .orElseThrow(() -> new EntityNotFoundException("Season not found" + seasonId));

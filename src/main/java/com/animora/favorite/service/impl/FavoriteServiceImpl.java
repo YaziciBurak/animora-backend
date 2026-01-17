@@ -28,7 +28,7 @@ public class FavoriteServiceImpl implements FavoriteService {
 
 
     @Override
-    public FavoriteResponse addFavorite(Long userId, Long animeId) {
+    public FavoriteResponse createFavorite(Long userId, Long animeId) {
 
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException("User not found"));

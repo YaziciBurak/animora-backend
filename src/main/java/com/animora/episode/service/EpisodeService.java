@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface EpisodeService {
 
-    EpisodeResponse addEpisodeToSeason(Long seasonId, EpisodeRequest request);
+    EpisodeResponse createEpisodeToSeason(Long seasonId, EpisodeRequest request);
 
     List<EpisodeResponse> getEpisodesBySeasonId(Long seasonId);
 }
