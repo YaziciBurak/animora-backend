@@ -14,7 +14,12 @@ import java.util.List;
 @AllArgsConstructor
 @Entity
 @Builder
-@Table(name = "season")
+@Table(
+        name = "season",
+        uniqueConstraints = {
+                @UniqueConstraint(columnNames = {"anime_id", "season_number"})
+        }
+)
 public class Season {
 
     @Id

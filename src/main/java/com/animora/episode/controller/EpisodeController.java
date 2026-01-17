@@ -18,12 +18,12 @@ public class EpisodeController {
     private final EpisodeService episodeService;
 
     @PostMapping("/{seasonId}/episodes")
-    public ResponseEntity<EpisodeResponse> addEpisode(
+    public ResponseEntity<EpisodeResponse> createEpisode(
             @PathVariable Long seasonId,
             @Valid @RequestBody EpisodeRequest request
              ) {
         EpisodeResponse response =
-                episodeService.addEpisodeToSeason(seasonId, request);
+                episodeService.createEpisodeToSeason(seasonId, request);
 
         return ResponseEntity.ok(response);
     }

@@ -4,5 +4,5 @@ import java.util.List;
 
 public interface AnimeGenreService {
 
-    void addGenresToAnime(Long animeId, List<Long> genreIds);
+    void createGenresToAnime(Long animeId, List<Long> genreIds);
 }

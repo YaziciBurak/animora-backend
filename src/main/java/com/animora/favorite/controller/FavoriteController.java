@@ -18,10 +18,10 @@ public class FavoriteController {
     private final FavoriteService favoriteService;
 
     @PostMapping
-    public ResponseEntity<FavoriteResponse> addFavorite(@PathVariable Long userId,
+    public ResponseEntity<FavoriteResponse> createFavorite(@PathVariable Long userId,
                                                         @RequestBody FavoriteRequest request) {
 
-        FavoriteResponse response = favoriteService.addFavorite(userId, request.getAnimeId());
+        FavoriteResponse response = favoriteService.createFavorite(userId, request.getAnimeId());
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }

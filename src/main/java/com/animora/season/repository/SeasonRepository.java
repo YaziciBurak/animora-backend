@@ -8,5 +8,7 @@ import java.util.List;
 
 public interface SeasonRepository extends JpaRepository<Season, Long> {
 
-    List<Season> findByAnime(Anime anime);
+    List<Season> findByAnimeOrderBySeasonNumberAsc(Anime anime);
+
+    boolean existsByAnimeAndSeasonNumber(Anime anime, int seasonNumber);
 }

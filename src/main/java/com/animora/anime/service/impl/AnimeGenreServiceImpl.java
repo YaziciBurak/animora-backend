@@ -23,7 +23,7 @@ public class AnimeGenreServiceImpl implements AnimeGenreService {
     private final AnimeGenreRepository animeGenreRepository;
 
     @Override
-    public void addGenresToAnime(Long animeId, List<Long> genreIds) {
+    public void createGenresToAnime(Long animeId, List<Long> genreIds) {
         Anime anime = animeRepository.findById(animeId)
                 .orElseThrow(() -> new RuntimeException("Anime not found: " + animeId));
 
