@@ -11,13 +11,13 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/seasons")
+@RequestMapping("/api/seasons/{seasonId}/episodes")
 @RequiredArgsConstructor
 public class EpisodeController {
 
     private final EpisodeService episodeService;
 
-    @PostMapping("/{seasonId}/episodes")
+    @PostMapping
     public ResponseEntity<EpisodeResponse> createEpisode(
             @PathVariable Long seasonId,
             @Valid @RequestBody EpisodeRequest request
@@ -28,7 +28,7 @@ public class EpisodeController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/{seasonId}/episodes")
+    @GetMapping
     public ResponseEntity<List<EpisodeResponse>> getEpisodes(
             @PathVariable Long seasonId
     ) {

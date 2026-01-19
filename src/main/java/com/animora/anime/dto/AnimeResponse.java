@@ -3,6 +3,7 @@ package com.animora.anime.dto;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Getter
 @Setter
@@ -17,4 +18,6 @@ public class AnimeResponse {
     private LocalDate releaseDate;
     private String status;
     private String coverImage;
+
+    private List<GenreSummaryResponse> genres;
 }

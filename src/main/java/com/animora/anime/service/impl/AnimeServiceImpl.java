@@ -6,6 +6,8 @@ import com.animora.anime.entity.Anime;
 import com.animora.anime.mapper.AnimeMapper;
 import com.animora.anime.repository.AnimeRepository;
 import com.animora.anime.service.AnimeService;
+import com.animora.season.entity.Season;
+import com.animora.season.repository.SeasonRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -20,12 +22,23 @@ public class AnimeServiceImpl implements AnimeService {
 
     private final AnimeRepository animeRepository;
     private final AnimeMapper animeMapper;
+    private final SeasonRepository seasonRepository;
 
     @Override
     public AnimeResponse createAnime(AnimeRequest request) {
         Anime anime = animeMapper.toEntity(request);
-        animeRepository.save(anime);
-        return animeMapper.toResponse(anime);
+        Anime savedAnime = animeRepository.save(anime);
+
+        if (!seasonRepository.existsByAnimeAndSeasonNumber(savedAnime, 1)) {
+            Season season1 = Season.builder()
+                    .seasonNumber(1)
+                    .anime(savedAnime)
+                    .build();
+
+            seasonRepository.save(season1);
+        }
+
+        return animeMapper.toResponse(savedAnime);
     }
 
     @Override

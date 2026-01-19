@@ -9,9 +9,9 @@ import com.animora.episode.service.EpisodeService;
 import com.animora.season.entity.Season;
 import com.animora.season.repository.SeasonRepository;
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -47,6 +47,7 @@ public class EpisodeServiceImpl implements EpisodeService {
     }
 
     @Override
+    @Transactional
     public List<EpisodeResponse> getEpisodesBySeasonId(Long seasonId) {
         Season season = seasonRepository.findById(seasonId)
                 .orElseThrow(() -> new EntityNotFoundException("Season not found: " + seasonId));
