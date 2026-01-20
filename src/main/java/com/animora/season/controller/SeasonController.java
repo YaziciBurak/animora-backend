@@ -40,4 +40,5 @@ public class SeasonController {
         seasonService.deleteSeason(animeId, seasonId);
         return ResponseEntity.noContent().build();
     }
+
 }

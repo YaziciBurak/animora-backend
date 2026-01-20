@@ -1,17 +1,23 @@
 package com.animora.anime.mapper;
 
+import com.animora.anime.dto.AnimeDetailResponse;
 import com.animora.anime.dto.AnimeRequest;
 import com.animora.anime.dto.AnimeResponse;
 import com.animora.anime.dto.GenreSummaryResponse;
 import com.animora.anime.entity.Anime;
 import com.animora.anime.entity.AnimeGenre;
 import com.animora.genre.entity.Genre;
+import com.animora.season.mapper.SeasonMapper;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 
 @Component
+@RequiredArgsConstructor
 public class AnimeMapper {
+
+    private final SeasonMapper seasonMapper;
 
     public Anime toEntity(AnimeRequest request) {
         return Anime.builder()
@@ -39,6 +45,26 @@ public class AnimeMapper {
                                 .map(this::toGenreSummary)
                                 .toList()
                 )
+                .build();
+    }
+
+    public AnimeDetailResponse toDetailResponse(Anime anime) {
+        return AnimeDetailResponse.builder()
+                .id(anime.getId())
+                .title(anime.getTitle())
+                .description(anime.getDescription())
+                .releaseDate(anime.getReleaseDate())
+                .status(anime.getStatus())
+                .coverImage(anime.getCoverImage())
+                .genres(anime.getGenres().stream()
+                        .map(ag -> new GenreSummaryResponse(
+                                ag.getGenre().getId(),
+                                ag.getGenre().getName()
+                        ))
+                        .toList())
+                .seasons(anime.getSeasons().stream()
+                        .map(seasonMapper::toResponse)
+                        .toList())
                 .build();
     }
 

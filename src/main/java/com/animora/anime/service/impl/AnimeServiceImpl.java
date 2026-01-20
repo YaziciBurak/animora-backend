@@ -1,5 +1,6 @@
 package com.animora.anime.service.impl;
 
+import com.animora.anime.dto.AnimeDetailResponse;
 import com.animora.anime.dto.AnimeRequest;
 import com.animora.anime.dto.AnimeResponse;
 import com.animora.anime.entity.Anime;
@@ -9,9 +10,9 @@ import com.animora.anime.service.AnimeService;
 import com.animora.season.entity.Season;
 import com.animora.season.repository.SeasonRepository;
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -44,7 +45,7 @@ public class AnimeServiceImpl implements AnimeService {
     @Override
     public AnimeResponse getAnimeById(Long id) {
         Anime anime = animeRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Not found: " +id));
+                .orElseThrow(() -> new EntityNotFoundException("Not found: " +id));
         return animeMapper.toResponse(anime);
     }
 
@@ -59,7 +60,7 @@ public class AnimeServiceImpl implements AnimeService {
     @Override
     public AnimeResponse updateAnime(Long id, AnimeRequest request) {
         Anime anime = animeRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Not found: " + id));
+                .orElseThrow(() -> new EntityNotFoundException("Not found: " + id));
 
         anime.setTitle(request.getTitle());
         anime.setDescription(request.getDescription());
@@ -70,6 +71,16 @@ public class AnimeServiceImpl implements AnimeService {
         animeRepository.save(anime);
 
         return animeMapper.toResponse(anime);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public AnimeDetailResponse getAnimeDetail(Long animeId) {
+
+        Anime anime = animeRepository.findById(animeId)
+                .orElseThrow(() -> new EntityNotFoundException("Anime not found"));
+
+        return animeMapper.toDetailResponse(anime);
     }
 
     @Override

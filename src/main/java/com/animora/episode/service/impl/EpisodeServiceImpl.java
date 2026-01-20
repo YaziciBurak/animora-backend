@@ -30,12 +30,8 @@ public class EpisodeServiceImpl implements EpisodeService {
         Season season = seasonRepository.findById(seasonId)
                 .orElseThrow(() -> new EntityNotFoundException("Season not found" + seasonId));
 
-        boolean exists = episodeRepository
-                .existsBySeasonIdAndEpisodeNumber(seasonId, request.getEpisodeNumber());
-
-        if (exists) {
-            throw new IllegalStateException(
-                    "Episode already exists in this season:" + request.getEpisodeNumber());
+        if (episodeRepository.existsBySeasonIdAndEpisodeNumber(seasonId, request.getEpisodeNumber())) {
+            throw new IllegalStateException("Episode is already exists in this season:" + request.getEpisodeNumber());
         }
 
         Episode episode = episodeMapper.toEntity(request);
@@ -52,7 +48,7 @@ public class EpisodeServiceImpl implements EpisodeService {
         Season season = seasonRepository.findById(seasonId)
                 .orElseThrow(() -> new EntityNotFoundException("Season not found: " + seasonId));
 
-        return episodeRepository.findBySeason(season)
+        return episodeRepository.findBySeasonOrderByEpisodeNumberAsc(season)
                 .stream()
                 .map(episodeMapper::toResponse)
                 .toList();

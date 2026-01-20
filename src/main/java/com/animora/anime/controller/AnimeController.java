@@ -1,5 +1,6 @@
 package com.animora.anime.controller;
 
+import com.animora.anime.dto.AnimeDetailResponse;
 import com.animora.anime.dto.AnimeRequest;
 import com.animora.anime.dto.AnimeResponse;
 import com.animora.anime.service.AnimeService;
@@ -28,6 +29,11 @@ public class AnimeController {
     public ResponseEntity<AnimeResponse> getAnime(@PathVariable Long id) {
         AnimeResponse response = animeService.getAnimeById(id);
         return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/{id}/detail")
+    public ResponseEntity<AnimeDetailResponse> getAnimeDetail(@PathVariable Long id) {
+        return ResponseEntity.ok(animeService.getAnimeDetail(id));
     }
 
     @GetMapping

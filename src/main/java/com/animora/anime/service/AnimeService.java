@@ -1,5 +1,6 @@
 package com.animora.anime.service;
 
+import com.animora.anime.dto.AnimeDetailResponse;
 import com.animora.anime.dto.AnimeRequest;
 import com.animora.anime.dto.AnimeResponse;
 
@@ -14,6 +15,8 @@ public interface AnimeService {
     List<AnimeResponse> getAllAnime();
 
     AnimeResponse updateAnime(Long id, AnimeRequest request);
+
+    AnimeDetailResponse getAnimeDetail(Long animeId);
 
     void deleteAnime(Long id);
 }

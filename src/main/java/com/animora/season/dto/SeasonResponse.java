@@ -2,6 +2,7 @@ package com.animora.season.dto;
 
 import lombok.*;
 
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -11,4 +12,5 @@ public class SeasonResponse {
 
     private Long id;
     private int seasonNumber;
+    private int episodeCount;
 }
