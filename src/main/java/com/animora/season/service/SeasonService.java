@@ -1,5 +1,6 @@
 package com.animora.season.service;
 
+import com.animora.season.dto.SeasonDetailResponse;
 import com.animora.season.dto.SeasonRequest;
 import com.animora.season.dto.SeasonResponse;
 
@@ -13,4 +14,6 @@ public interface SeasonService {
     List<SeasonResponse> getSeasonsByAnimeId(Long animeId);
 
     void deleteSeason(Long animeId, Long seasonId);
+
+    SeasonDetailResponse getSeasonDetail(Long seasonId);
 }

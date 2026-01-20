@@ -2,6 +2,7 @@ package com.animora.season.service.impl;
 
 import com.animora.anime.entity.Anime;
 import com.animora.anime.repository.AnimeRepository;
+import com.animora.season.dto.SeasonDetailResponse;
 import com.animora.season.dto.SeasonRequest;
 import com.animora.season.dto.SeasonResponse;
 import com.animora.season.entity.Season;
@@ -53,6 +54,7 @@ public class SeasonServiceImpl implements SeasonService {
                 .toList();
     }
 
+    @Override
     public void deleteSeason(Long animeId, Long seasonId) {
 
         Anime anime = animeRepository.findById(animeId)
@@ -66,5 +68,14 @@ public class SeasonServiceImpl implements SeasonService {
         }
 
         seasonRepository.delete(season);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public SeasonDetailResponse getSeasonDetail(Long seasonId) {
+        Season season = seasonRepository.findById(seasonId)
+                .orElseThrow(() -> new EntityNotFoundException("Season not found"));
+
+        return seasonMapper.toDetailResponse(season);
     }
 }

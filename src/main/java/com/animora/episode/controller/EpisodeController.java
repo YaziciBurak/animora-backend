@@ -5,6 +5,7 @@ import com.animora.episode.dto.EpisodeResponse;
 import com.animora.episode.service.EpisodeService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,7 +26,8 @@ public class EpisodeController {
         EpisodeResponse response =
                 episodeService.createEpisodeToSeason(seasonId, request);
 
-        return ResponseEntity.ok(response);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(response);
     }
 
     @GetMapping
