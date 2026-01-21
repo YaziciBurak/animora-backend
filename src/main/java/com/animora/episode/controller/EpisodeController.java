@@ -5,11 +5,13 @@ import com.animora.episode.dto.EpisodeResponse;
 import com.animora.episode.service.EpisodeService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/seasons/{seasonId}/episodes")
@@ -31,11 +33,13 @@ public class EpisodeController {
     }
 
     @GetMapping
-    public ResponseEntity<List<EpisodeResponse>> getEpisodes(
-            @PathVariable Long seasonId
+    public Page<EpisodeResponse> getEpisodes(
+            @PathVariable Long seasonId,
+            @PageableDefault(
+                    sort = "episodeNumber",
+                    direction = Sort.Direction.ASC
+            ) Pageable pageable
     ) {
-        return ResponseEntity.ok(
-                episodeService.getEpisodesBySeasonId(seasonId)
-        );
+        return episodeService.getEpisodesBySeasonId(seasonId, pageable);
     }
 }

@@ -10,10 +10,11 @@ import com.animora.season.entity.Season;
 import com.animora.season.repository.SeasonRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -44,13 +45,12 @@ public class EpisodeServiceImpl implements EpisodeService {
 
     @Override
     @Transactional
-    public List<EpisodeResponse> getEpisodesBySeasonId(Long seasonId) {
-        Season season = seasonRepository.findById(seasonId)
-                .orElseThrow(() -> new EntityNotFoundException("Season not found: " + seasonId));
+    public Page<EpisodeResponse> getEpisodesBySeasonId(Long seasonId, Pageable pageable) {
 
-        return episodeRepository.findBySeasonOrderByEpisodeNumberAsc(season)
-                .stream()
-                .map(episodeMapper::toResponse)
-                .toList();
+        if (!seasonRepository.existsById(seasonId)) {
+            throw new EntityNotFoundException("Season not found" + seasonId);
+        }
+        return episodeRepository.findBySeasonId(seasonId, pageable)
+                .map(episodeMapper::toResponse);
     }
 }

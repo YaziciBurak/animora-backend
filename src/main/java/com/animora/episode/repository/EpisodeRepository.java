@@ -1,14 +1,13 @@
 package com.animora.episode.repository;
 
 import com.animora.episode.entity.Episode;
-import com.animora.season.entity.Season;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
-
-import java.util.List;
 
 public interface EpisodeRepository extends JpaRepository<Episode, Long> {
 
-    List<Episode> findBySeasonOrderByEpisodeNumberAsc(Season season);
+    Page<Episode> findBySeasonId(Long seasonId, Pageable pageable);
 
     boolean existsBySeasonIdAndEpisodeNumber(Long seasonId, int episodeNumber);
 }

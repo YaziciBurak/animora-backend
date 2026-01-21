@@ -29,10 +29,11 @@ public class Season {
     private int seasonNumber;
     private int releaseYear;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "anime_id", nullable = false)
     private Anime anime;
 
     @OneToMany(mappedBy = "season", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OrderBy("episodeNumber ASC")
     private List<Episode> episodes = new ArrayList<>();
 }
