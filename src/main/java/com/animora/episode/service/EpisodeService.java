@@ -2,12 +2,13 @@ package com.animora.episode.service;
 
 import com.animora.episode.dto.EpisodeRequest;
 import com.animora.episode.dto.EpisodeResponse;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
-import java.util.List;
 
 public interface EpisodeService {
 
     EpisodeResponse createEpisodeToSeason(Long seasonId, EpisodeRequest request);
 
-    List<EpisodeResponse> getEpisodesBySeasonId(Long seasonId);
+    Page<EpisodeResponse> getEpisodesBySeasonId(Long seasonId, Pageable pageable);
 }

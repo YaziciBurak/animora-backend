@@ -13,7 +13,11 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name = "episode")
+@Table(name = "episode",
+        uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"season_id", "episode_number"})
+        }
+)
 public class Episode {
 
     @Id
@@ -30,7 +34,7 @@ public class Episode {
 
     private String videoUrl;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "season_id", nullable = false)
     private Season season;
 }
