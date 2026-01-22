@@ -1,15 +1,18 @@
 package com.animora.season.controller;
 
+import com.animora.common.pagination.PageResponse;
 import com.animora.season.dto.SeasonRequest;
 import com.animora.season.dto.SeasonResponse;
 import com.animora.season.service.SeasonService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/animes/{animeId}/seasons")
@@ -28,8 +31,15 @@ public class SeasonController {
     }
 
     @GetMapping
-    public ResponseEntity<List<SeasonResponse>> getSeasons(@PathVariable Long animeId) {
-        return ResponseEntity.ok(seasonService.getSeasonsByAnimeId(animeId));
+    public PageResponse<SeasonResponse> getSeasons(
+            @PathVariable Long animeId,
+            @PageableDefault(
+                    sort = "seasonNumber",
+                    direction = Sort.Direction.ASC
+            )
+            Pageable pageable
+    ) {
+        return seasonService.getSeasonsByAnimeId(animeId, pageable);
     }
 
     @DeleteMapping("/{seasonId}")
