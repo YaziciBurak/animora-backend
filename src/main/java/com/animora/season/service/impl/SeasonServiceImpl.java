@@ -2,6 +2,7 @@ package com.animora.season.service.impl;
 
 import com.animora.anime.entity.Anime;
 import com.animora.anime.repository.AnimeRepository;
+import com.animora.common.pagination.PageResponse;
 import com.animora.season.dto.SeasonDetailResponse;
 import com.animora.season.dto.SeasonRequest;
 import com.animora.season.dto.SeasonResponse;
@@ -11,10 +12,10 @@ import com.animora.season.repository.SeasonRepository;
 import com.animora.season.service.SeasonService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -43,15 +44,16 @@ public class SeasonServiceImpl implements SeasonService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<SeasonResponse> getSeasonsByAnimeId(Long animeId) {
+    public PageResponse<SeasonResponse> getSeasonsByAnimeId(Long animeId, Pageable pageable) {
 
-        Anime anime = animeRepository.findById(animeId)
-                .orElseThrow(() -> new EntityNotFoundException("Anime not found"));
+        if (!animeRepository.existsById(animeId)) {
+            throw new EntityNotFoundException("Anime not found");
+        }
 
-        return seasonRepository.findByAnimeOrderBySeasonNumberAsc(anime)
-                .stream()
-                .map(seasonMapper::toResponse)
-                .toList();
+        return PageResponse.from(
+                seasonRepository.findByAnime_IdOrderBySeasonNumberAsc(animeId, pageable)
+                        .map(seasonMapper::toResponse)
+        );
     }
 
     @Override

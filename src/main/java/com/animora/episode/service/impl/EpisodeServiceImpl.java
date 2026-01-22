@@ -48,7 +48,7 @@ public class EpisodeServiceImpl implements EpisodeService {
     public PageResponse<EpisodeResponse> getEpisodesBySeasonId(Long seasonId, Pageable pageable) {
 
         if (!seasonRepository.existsById(seasonId)) {
-            throw new EntityNotFoundException("Season not found" + seasonId);
+            throw new EntityNotFoundException("Season not found:" + seasonId);
         }
 
         return PageResponse.from(
