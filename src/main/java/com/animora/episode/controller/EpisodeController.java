@@ -1,11 +1,11 @@
 package com.animora.episode.controller;
 
+import com.animora.common.pagination.PageResponse;
 import com.animora.episode.dto.EpisodeRequest;
 import com.animora.episode.dto.EpisodeResponse;
 import com.animora.episode.service.EpisodeService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -33,9 +33,10 @@ public class EpisodeController {
     }
 
     @GetMapping
-    public Page<EpisodeResponse> getEpisodes(
+    public PageResponse<EpisodeResponse> getEpisodes(
             @PathVariable Long seasonId,
             @PageableDefault(
+                    size = 10,
                     sort = "episodeNumber",
                     direction = Sort.Direction.ASC
             ) Pageable pageable
