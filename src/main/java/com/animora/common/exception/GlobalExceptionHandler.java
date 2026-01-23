@@ -1,16 +1,22 @@
 package com.animora.common.exception;
 
 import com.animora.common.exception.dto.ErrorResponse;
+import com.animora.common.exception.dto.ValidationErrorResponse;
+import com.animora.episode.exception.EpisodeAlreadyExistsException;
+import com.animora.season.exception.SeasonAlreadyExistsException;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.time.LocalDateTime;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -34,8 +40,6 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleGenericException(
             Exception ex,
             HttpServletRequest request) {
-
-        ex.printStackTrace();
 
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(ErrorResponse.builder()
@@ -74,22 +78,44 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ErrorResponse> handleValidationException(MethodArgumentNotValidException ex,
-                                                                   HttpServletRequest request) {
-        String message = ex.getBindingResult()
+    public ResponseEntity<ValidationErrorResponse> handleValidationException(MethodArgumentNotValidException ex,
+                                                                             HttpServletRequest request) {
+        Map<String, String> errors = ex.getBindingResult()
                 .getFieldErrors()
                 .stream()
-                .map(err -> err.getField() + ": " + err.getDefaultMessage())
-                .findFirst()
-                .orElse("Validation error");
+                .collect(Collectors.toMap(
+                        FieldError::getField,
+                        error -> error.getDefaultMessage() != null
+                        ? error.getDefaultMessage()
+                        : "Invalid value",
+                        (existing, replacement) -> existing
+                ));
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body(ErrorResponse.builder()
+                .body(ValidationErrorResponse.builder()
                         .status(HttpStatus.BAD_REQUEST.value())
                         .error("VALIDATION_ERROR")
-                        .message(message)
                         .path(request.getRequestURI())
                         .timeStamp(LocalDateTime.now())
+                        .validationErrors(errors)
                         .build());
+    }
+
+    @ExceptionHandler({
+            SeasonAlreadyExistsException.class,
+            EpisodeAlreadyExistsException.class
+    })
+    public ResponseEntity<ErrorResponse> handleBusinessExceptions(
+            RuntimeException ex,
+            HttpServletRequest request
+    ) {
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ErrorResponse.builder()
+                        .status(HttpStatus.BAD_REQUEST.value())
+                        .error("BUSINESS_RULE_VALIDATION")
+                        .message(ex.getMessage())
+                        .path(request.getRequestURI())
+                        .timeStamp(LocalDateTime.now())
+                .build());
     }
 }

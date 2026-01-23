@@ -4,6 +4,7 @@ import com.animora.common.pagination.PageResponse;
 import com.animora.episode.dto.EpisodeRequest;
 import com.animora.episode.dto.EpisodeResponse;
 import com.animora.episode.entity.Episode;
+import com.animora.episode.exception.EpisodeAlreadyExistsException;
 import com.animora.episode.mapper.EpisodeMapper;
 import com.animora.episode.repository.EpisodeRepository;
 import com.animora.episode.service.EpisodeService;
@@ -32,7 +33,7 @@ public class EpisodeServiceImpl implements EpisodeService {
                 .orElseThrow(() -> new EntityNotFoundException("Season not found" + seasonId));
 
         if (episodeRepository.existsBySeasonIdAndEpisodeNumber(seasonId, request.getEpisodeNumber())) {
-            throw new IllegalStateException("Episode is already exists in this season:" + request.getEpisodeNumber());
+            throw new EpisodeAlreadyExistsException(request.getEpisodeNumber());
         }
 
         Episode episode = episodeMapper.toEntity(request);
@@ -55,5 +56,50 @@ public class EpisodeServiceImpl implements EpisodeService {
                 episodeRepository.findBySeasonId(seasonId, pageable)
                         .map(episodeMapper::toResponse)
         );
+    }
+
+    @Override
+    public EpisodeResponse updateEpisode(Long seasonId, Long episodeId, EpisodeRequest request) {
+
+        Season season = seasonRepository.findById(seasonId)
+                .orElseThrow(() -> new EntityNotFoundException("Season not found: " + seasonId));
+
+        Episode episode = episodeRepository.findById(episodeId)
+                .orElseThrow(() -> new EntityNotFoundException("Episode not found: " + episodeId));
+
+        if (!episode.getSeason().getId().equals(season.getId())) {
+            throw new IllegalStateException("Episode does not belong to this season");
+        }
+
+        if (episodeRepository.existsBySeasonIdAndEpisodeNumberAndIdNot(
+                seasonId,
+                request.getEpisodeNumber(),
+                episodeId)) {
+            throw new EpisodeAlreadyExistsException(request.getEpisodeNumber());
+        }
+
+        episode.setEpisodeNumber(request.getEpisodeNumber());
+        episode.setTitle(request.getTitle());
+        episode.setDuration(request.getDuration());
+        episode.setAirDate(request.getAirDate());
+        episode.setVideoUrl(request.getVideoUrl());
+
+        return episodeMapper.toResponse(episode);
+    }
+
+    @Override
+    public void deleteEpisode(Long seasonId, Long episodeId) {
+
+        Season season = seasonRepository.findById(seasonId)
+                .orElseThrow(() -> new EntityNotFoundException("Season not found: " + seasonId));
+
+        Episode episode = episodeRepository.findById(episodeId)
+                .orElseThrow(() -> new EntityNotFoundException("Episode not found: " + episodeId));
+
+        if (!episode.getSeason().getId().equals(season.getId())) {
+            throw new IllegalStateException("Episode does not belong to this season");
+        }
+
+        episodeRepository.delete(episode);
     }
 }

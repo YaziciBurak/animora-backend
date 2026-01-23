@@ -11,4 +11,8 @@ public interface EpisodeService {
     EpisodeResponse createEpisodeToSeason(Long seasonId, EpisodeRequest request);
 
     PageResponse<EpisodeResponse> getEpisodesBySeasonId(Long seasonId, Pageable pageable);
+
+    EpisodeResponse updateEpisode(Long seasonId, Long episodeId, EpisodeRequest request);
+
+    void deleteEpisode(Long seasonId, Long episodeId);
 }
