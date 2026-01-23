@@ -43,4 +43,22 @@ public class EpisodeController {
     ) {
         return episodeService.getEpisodesBySeasonId(seasonId, pageable);
     }
+
+    @PutMapping("/{episodeId}")
+    public ResponseEntity<EpisodeResponse> updateEpisode(
+            @PathVariable Long seasonId,
+            @PathVariable Long episodeId,
+            @Valid @RequestBody EpisodeRequest request
+    ) {
+        return ResponseEntity.ok(
+                episodeService.updateEpisode(seasonId, episodeId, request)
+        );
+    }
+
+    @DeleteMapping("/{episodeId}")
+    public ResponseEntity<Void> deleteEpisode(@PathVariable Long seasonId,
+                                              @PathVariable Long episodeId) {
+        episodeService.deleteEpisode(seasonId, episodeId);
+        return ResponseEntity.noContent().build();
+    }
 }

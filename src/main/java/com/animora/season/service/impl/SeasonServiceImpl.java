@@ -7,6 +7,7 @@ import com.animora.season.dto.SeasonDetailResponse;
 import com.animora.season.dto.SeasonRequest;
 import com.animora.season.dto.SeasonResponse;
 import com.animora.season.entity.Season;
+import com.animora.season.exception.SeasonAlreadyExistsException;
 import com.animora.season.mapper.SeasonMapper;
 import com.animora.season.repository.SeasonRepository;
 import com.animora.season.service.SeasonService;
@@ -33,7 +34,7 @@ public class SeasonServiceImpl implements SeasonService {
                 .orElseThrow(() -> new EntityNotFoundException("Anime not found"));
 
         if (seasonRepository.existsByAnimeAndSeasonNumber(anime, request.getSeasonNumber())) {
-            throw new IllegalStateException("Season already exists");
+            throw new SeasonAlreadyExistsException(request.getSeasonNumber());
         }
 
         Season season = seasonMapper.toEntity(request, anime);

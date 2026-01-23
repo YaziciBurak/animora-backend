@@ -12,6 +12,6 @@ import lombok.*;
 public class SeasonRequest {
 
     @NotNull
-    @Min(1)
+    @Min(value = 1, message = "Season number must be at least 1")
     private int seasonNumber;
 }
