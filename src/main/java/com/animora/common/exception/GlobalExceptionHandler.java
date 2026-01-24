@@ -1,5 +1,7 @@
 package com.animora.common.exception;
 
+import com.animora.anime.exception.AnimeAlreadyExistsException;
+import com.animora.anime.exception.AnimeHasSeasonsException;
 import com.animora.common.exception.dto.ErrorResponse;
 import com.animora.common.exception.dto.ValidationErrorResponse;
 import com.animora.episode.exception.EpisodeAlreadyExistsException;
@@ -129,6 +131,35 @@ public class GlobalExceptionHandler {
                 .body(ErrorResponse.builder()
                         .status(HttpStatus.CONFLICT.value())
                         .error("SEASON_HAS_EPISODES")
+                        .message(ex.getMessage())
+                        .path(request.getRequestURI())
+                        .timeStamp(LocalDateTime.now())
+                        .build());
+    }
+
+    @ExceptionHandler(AnimeHasSeasonsException.class)
+    public ResponseEntity<ErrorResponse> handleAnimeHasSeasons(AnimeHasSeasonsException ex,
+                                                               HttpServletRequest request) {
+
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(ErrorResponse.builder()
+                        .status(HttpStatus.CONFLICT.value())
+                        .error("ANIME_HAS_SEASONS")
+                        .message(ex.getMessage())
+                        .path(request.getRequestURI())
+                        .timeStamp(LocalDateTime.now())
+                        .build());
+    }
+
+    @ExceptionHandler(AnimeAlreadyExistsException.class)
+    public ResponseEntity<ErrorResponse> handleAnimeAlreadyExists(
+            AnimeAlreadyExistsException ex,
+            HttpServletRequest request) {
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(ErrorResponse.builder()
+                        .status(HttpStatus.BAD_REQUEST.value())
+                        .error("ANIME_ALREADY_EXISTS")
                         .message(ex.getMessage())
                         .path(request.getRequestURI())
                         .timeStamp(LocalDateTime.now())

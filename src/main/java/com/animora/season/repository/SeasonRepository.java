@@ -12,4 +12,6 @@ public interface SeasonRepository extends JpaRepository<Season, Long> {
     Page<Season> findByAnime_IdOrderBySeasonNumberAsc(Long animeId, Pageable pageable);
 
     boolean existsByAnimeAndSeasonNumber(Anime anime, int seasonNumber);
+
+    boolean existsByAnime_Id(Long animeId);
 }

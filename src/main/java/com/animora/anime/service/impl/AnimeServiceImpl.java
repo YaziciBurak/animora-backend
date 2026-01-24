@@ -4,6 +4,8 @@ import com.animora.anime.dto.AnimeDetailResponse;
 import com.animora.anime.dto.AnimeRequest;
 import com.animora.anime.dto.AnimeResponse;
 import com.animora.anime.entity.Anime;
+import com.animora.anime.exception.AnimeAlreadyExistsException;
+import com.animora.anime.exception.AnimeHasSeasonsException;
 import com.animora.anime.mapper.AnimeMapper;
 import com.animora.anime.repository.AnimeRepository;
 import com.animora.anime.service.AnimeService;
@@ -27,6 +29,11 @@ public class AnimeServiceImpl implements AnimeService {
 
     @Override
     public AnimeResponse createAnime(AnimeRequest request) {
+
+        if (animeRepository.existsByTitle(request.getTitle())) {
+            throw new AnimeAlreadyExistsException(request.getTitle());
+        }
+
         Anime anime = animeMapper.toEntity(request);
         Anime savedAnime = animeRepository.save(anime);
 
@@ -85,8 +92,14 @@ public class AnimeServiceImpl implements AnimeService {
 
     @Override
     public void deleteAnime(Long id) {
+
         Anime anime = animeRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Anime not found: " + id));
+
+        if (seasonRepository.existsByAnime_Id(id)) {
+            throw new AnimeHasSeasonsException(id);
+        }
+
         animeRepository.delete(anime);
     }
 }
