@@ -4,6 +4,7 @@ import com.animora.common.exception.dto.ErrorResponse;
 import com.animora.common.exception.dto.ValidationErrorResponse;
 import com.animora.episode.exception.EpisodeAlreadyExistsException;
 import com.animora.season.exception.SeasonAlreadyExistsException;
+import com.animora.season.exception.SeasonHasEpisodesException;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
@@ -117,5 +118,20 @@ public class GlobalExceptionHandler {
                         .path(request.getRequestURI())
                         .timeStamp(LocalDateTime.now())
                 .build());
+    }
+
+    @ExceptionHandler(SeasonHasEpisodesException.class)
+    public ResponseEntity<ErrorResponse> handleSeasonHasEpisodes(
+            SeasonHasEpisodesException ex,
+            HttpServletRequest request) {
+
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(ErrorResponse.builder()
+                        .status(HttpStatus.CONFLICT.value())
+                        .error("SEASON_HAS_EPISODES")
+                        .message(ex.getMessage())
+                        .path(request.getRequestURI())
+                        .timeStamp(LocalDateTime.now())
+                        .build());
     }
 }
