@@ -8,6 +8,7 @@ import com.animora.season.dto.SeasonRequest;
 import com.animora.season.dto.SeasonResponse;
 import com.animora.season.entity.Season;
 import com.animora.season.exception.SeasonAlreadyExistsException;
+import com.animora.season.exception.SeasonHasEpisodesException;
 import com.animora.season.mapper.SeasonMapper;
 import com.animora.season.repository.SeasonRepository;
 import com.animora.season.service.SeasonService;
@@ -68,6 +69,10 @@ public class SeasonServiceImpl implements SeasonService {
 
         if (!season.getAnime().getId().equals(anime.getId())) {
             throw new IllegalStateException("Season does not belong to this anime");
+        }
+
+        if (!season.getEpisodes().isEmpty()) {
+            throw new SeasonHasEpisodesException(seasonId);
         }
 
         seasonRepository.delete(season);
