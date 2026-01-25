@@ -30,8 +30,10 @@ public class AnimeServiceImpl implements AnimeService {
     @Override
     public AnimeResponse createAnime(AnimeRequest request) {
 
-        if (animeRepository.existsByTitle(request.getTitle())) {
-            throw new AnimeAlreadyExistsException(request.getTitle());
+        String title = request.getTitle().trim();
+
+        if (animeRepository.existsByTitleIgnoreCase(title)) {
+            throw new AnimeAlreadyExistsException(title);
         }
 
         Anime anime = animeMapper.toEntity(request);
