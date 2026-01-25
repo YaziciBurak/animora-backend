@@ -1,12 +1,7 @@
 package com.animora.common.exception;
 
-import com.animora.anime.exception.AnimeAlreadyExistsException;
-import com.animora.anime.exception.AnimeHasSeasonsException;
 import com.animora.common.exception.dto.ErrorResponse;
 import com.animora.common.exception.dto.ValidationErrorResponse;
-import com.animora.episode.exception.EpisodeAlreadyExistsException;
-import com.animora.season.exception.SeasonAlreadyExistsException;
-import com.animora.season.exception.SeasonHasEpisodesException;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
@@ -104,65 +99,19 @@ public class GlobalExceptionHandler {
                         .build());
     }
 
-    @ExceptionHandler({
-            SeasonAlreadyExistsException.class,
-            EpisodeAlreadyExistsException.class
-    })
-    public ResponseEntity<ErrorResponse> handleBusinessExceptions(
-            RuntimeException ex,
+    @ExceptionHandler(BusinessException.class)
+    public ResponseEntity<ErrorResponse> handleBusinessException(
+            BusinessException ex,
             HttpServletRequest request
     ) {
-
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ErrorResponse.builder()
-                        .status(HttpStatus.BAD_REQUEST.value())
-                        .error("BUSINESS_RULE_VALIDATION")
-                        .message(ex.getMessage())
-                        .path(request.getRequestURI())
-                        .timeStamp(LocalDateTime.now())
-                .build());
-    }
-
-    @ExceptionHandler(SeasonHasEpisodesException.class)
-    public ResponseEntity<ErrorResponse> handleSeasonHasEpisodes(
-            SeasonHasEpisodesException ex,
-            HttpServletRequest request) {
-
-        return ResponseEntity.status(HttpStatus.CONFLICT)
+        return ResponseEntity.status(ex.getHttpStatus())
                 .body(ErrorResponse.builder()
-                        .status(HttpStatus.CONFLICT.value())
-                        .error("SEASON_HAS_EPISODES")
+                        .status(ex.getHttpStatus().value())
+                        .error(ex.getErrorCode())
                         .message(ex.getMessage())
                         .path(request.getRequestURI())
                         .timeStamp(LocalDateTime.now())
                         .build());
     }
 
-    @ExceptionHandler(AnimeHasSeasonsException.class)
-    public ResponseEntity<ErrorResponse> handleAnimeHasSeasons(AnimeHasSeasonsException ex,
-                                                               HttpServletRequest request) {
-
-        return ResponseEntity.status(HttpStatus.CONFLICT)
-                .body(ErrorResponse.builder()
-                        .status(HttpStatus.CONFLICT.value())
-                        .error("ANIME_HAS_SEASONS")
-                        .message(ex.getMessage())
-                        .path(request.getRequestURI())
-                        .timeStamp(LocalDateTime.now())
-                        .build());
-    }
-
-    @ExceptionHandler(AnimeAlreadyExistsException.class)
-    public ResponseEntity<ErrorResponse> handleAnimeAlreadyExists(
-            AnimeAlreadyExistsException ex,
-            HttpServletRequest request) {
-
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body(ErrorResponse.builder()
-                        .status(HttpStatus.BAD_REQUEST.value())
-                        .error("ANIME_ALREADY_EXISTS")
-                        .message(ex.getMessage())
-                        .path(request.getRequestURI())
-                        .timeStamp(LocalDateTime.now())
-                        .build());
-    }
 }

@@ -1,8 +1,15 @@
 package com.animora.anime.exception;
 
-public class AnimeHasSeasonsException extends RuntimeException{
+import com.animora.common.exception.BusinessException;
+import org.springframework.http.HttpStatus;
+
+public class AnimeHasSeasonsException extends BusinessException {
 
     public AnimeHasSeasonsException(Long animeId) {
-        super("Anime has seasons and cannot be deleted. Anime id: " + animeId);
+        super(
+                HttpStatus.CONFLICT,
+                "ANIME_HAS_SEASONS",
+                "Anime has seasons and cannot be deleted. Anime id: " + animeId
+                );
     }
 }
