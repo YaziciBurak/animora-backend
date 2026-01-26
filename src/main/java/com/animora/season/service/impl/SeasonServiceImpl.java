@@ -3,6 +3,7 @@ package com.animora.season.service.impl;
 import com.animora.anime.entity.Anime;
 import com.animora.anime.repository.AnimeRepository;
 import com.animora.common.pagination.PageResponse;
+import com.animora.episode.repository.EpisodeRepository;
 import com.animora.season.dto.SeasonDetailResponse;
 import com.animora.season.dto.SeasonRequest;
 import com.animora.season.dto.SeasonResponse;
@@ -26,6 +27,7 @@ public class SeasonServiceImpl implements SeasonService {
 
     private final SeasonRepository seasonRepository;
     private final AnimeRepository animeRepository;
+    private final EpisodeRepository episodeRepository;
     private final SeasonMapper seasonMapper;
 
     @Override
@@ -71,7 +73,7 @@ public class SeasonServiceImpl implements SeasonService {
             throw new IllegalStateException("Season does not belong to this anime");
         }
 
-        if (!season.getEpisodes().isEmpty()) {
+        if (episodeRepository.existsBySeasonId(seasonId)) {
             throw new SeasonHasEpisodesException(seasonId);
         }
 

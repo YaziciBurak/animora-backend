@@ -9,6 +9,8 @@ public interface EpisodeRepository extends JpaRepository<Episode, Long> {
 
     Page<Episode> findBySeasonId(Long seasonId, Pageable pageable);
 
+    boolean existsBySeasonId(Long seasonId);
+
     boolean existsBySeasonIdAndEpisodeNumber(Long seasonId, int episodeNumber);
 
     boolean existsBySeasonIdAndEpisodeNumberAndIdNot(Long seasonId, int episodeNumber, Long episodeId);
