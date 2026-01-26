@@ -5,6 +5,7 @@ import com.animora.episode.dto.EpisodeRequest;
 import com.animora.episode.dto.EpisodeResponse;
 import com.animora.episode.entity.Episode;
 import com.animora.episode.exception.EpisodeAlreadyExistsException;
+import com.animora.episode.exception.EpisodeNotInSeasonException;
 import com.animora.episode.mapper.EpisodeMapper;
 import com.animora.episode.repository.EpisodeRepository;
 import com.animora.episode.service.EpisodeService;
@@ -61,14 +62,11 @@ public class EpisodeServiceImpl implements EpisodeService {
     @Override
     public EpisodeResponse updateEpisode(Long seasonId, Long episodeId, EpisodeRequest request) {
 
-        Season season = seasonRepository.findById(seasonId)
-                .orElseThrow(() -> new EntityNotFoundException("Season not found: " + seasonId));
-
         Episode episode = episodeRepository.findById(episodeId)
                 .orElseThrow(() -> new EntityNotFoundException("Episode not found: " + episodeId));
 
-        if (!episode.getSeason().getId().equals(season.getId())) {
-            throw new IllegalStateException("Episode does not belong to this season");
+        if (!episode.getSeason().getId().equals(seasonId)) {
+            throw new EpisodeNotInSeasonException(episodeId,seasonId);
         }
 
         if (episodeRepository.existsBySeasonIdAndEpisodeNumberAndIdNot(
