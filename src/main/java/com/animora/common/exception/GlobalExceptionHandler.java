@@ -2,6 +2,7 @@ package com.animora.common.exception;
 
 import com.animora.common.exception.dto.ErrorResponse;
 import com.animora.common.exception.dto.ValidationErrorResponse;
+import com.animora.common.exception.enums.ErrorCode;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
@@ -27,7 +28,7 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.FORBIDDEN)
                 .body(ErrorResponse.builder()
                         .status(HttpStatus.FORBIDDEN.value())
-                        .error("FORBIDDEN")
+                        .error(ErrorCode.FORBIDDEN)
                         .message("You do not have permission to access this resource")
                         .path(request.getRequestURI())
                         .timeStamp(LocalDateTime.now())
@@ -42,7 +43,7 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(ErrorResponse.builder()
                         .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
-                        .error("INTERNAL_SERVER_ERROR")
+                        .error(ErrorCode.INTERNAL_SERVER_ERROR)
                         .message("Unexpected error occurred")
                         .path(request.getRequestURI())
                         .timeStamp(LocalDateTime.now())
@@ -55,7 +56,7 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
                 .body(ErrorResponse.builder()
                         .status(HttpStatus.NOT_FOUND.value())
-                        .error("NOT_FOUND")
+                        .error(ErrorCode.NOT_FOUND)
                         .message(ex.getMessage())
                         .path(request.getRequestURI())
                         .timeStamp(LocalDateTime.now())
@@ -68,7 +69,7 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(ErrorResponse.builder()
                         .status(HttpStatus.BAD_REQUEST.value())
-                        .error("BAD_REQUEST")
+                        .error(ErrorCode.BAD_REQUEST)
                         .message(ex.getMessage())
                         .path(request.getRequestURI())
                         .timeStamp(LocalDateTime.now())
@@ -92,7 +93,7 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(ValidationErrorResponse.builder()
                         .status(HttpStatus.BAD_REQUEST.value())
-                        .error("VALIDATION_ERROR")
+                        .error(ErrorCode.VALIDATION_ERROR)
                         .path(request.getRequestURI())
                         .timeStamp(LocalDateTime.now())
                         .validationErrors(errors)
