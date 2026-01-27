@@ -1,5 +1,6 @@
 package com.animora.common.exception.dto;
 
+import com.animora.common.exception.enums.ErrorCode;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -11,7 +12,7 @@ import java.util.Map;
 public class ValidationErrorResponse {
 
     private int status;
-    private String error;
+    private ErrorCode error;
     private String path;
     private LocalDateTime timeStamp;
 

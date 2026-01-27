@@ -1,0 +1,33 @@
+package com.animora.common.exception.enums;
+
+public enum ErrorCode {
+
+    // EPISODE
+    EPISODE_ALREADY_EXISTS,
+    EPISODE_NOT_IN_SEASON,
+    EPISODE_NOT_FOUND,
+
+    // ANIME
+    ANIME_ALREADY_EXISTS,
+    ANIME_HAS_SEASONS,
+
+    // SEASON
+    SEASON_NOT_FOUND,
+    SEASON_ALREADY_EXISTS,
+    SEASON_HAS_EPISODES,
+
+    // USER
+    USER_NOT_FOUND,
+
+
+    // AUTH - SECURITY
+    UNAUTHORIZED,
+    FORBIDDEN,
+
+    // COMMON
+    VALIDATION_ERROR,
+    INTERNAL_SERVER_ERROR,
+    NOT_FOUND,
+    BAD_REQUEST
+
+}
