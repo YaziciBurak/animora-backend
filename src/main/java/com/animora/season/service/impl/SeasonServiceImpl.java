@@ -1,6 +1,7 @@
 package com.animora.season.service.impl;
 
 import com.animora.anime.entity.Anime;
+import com.animora.anime.exception.AnimeNotFoundException;
 import com.animora.anime.repository.AnimeRepository;
 import com.animora.common.pagination.PageResponse;
 import com.animora.episode.repository.EpisodeRepository;
@@ -9,11 +10,12 @@ import com.animora.season.dto.SeasonRequest;
 import com.animora.season.dto.SeasonResponse;
 import com.animora.season.entity.Season;
 import com.animora.season.exception.SeasonAlreadyExistsException;
+import com.animora.season.exception.SeasonDoesNotBelongToAnimeException;
 import com.animora.season.exception.SeasonHasEpisodesException;
+import com.animora.season.exception.SeasonNotFoundException;
 import com.animora.season.mapper.SeasonMapper;
 import com.animora.season.repository.SeasonRepository;
 import com.animora.season.service.SeasonService;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -34,7 +36,7 @@ public class SeasonServiceImpl implements SeasonService {
     public SeasonResponse createSeason(Long animeId, SeasonRequest request) {
 
         Anime anime = animeRepository.findById(animeId)
-                .orElseThrow(() -> new EntityNotFoundException("Anime not found"));
+                .orElseThrow(() -> new AnimeNotFoundException(animeId));
 
         if (seasonRepository.existsByAnimeAndSeasonNumber(anime, request.getSeasonNumber())) {
             throw new SeasonAlreadyExistsException(request.getSeasonNumber());
@@ -51,7 +53,7 @@ public class SeasonServiceImpl implements SeasonService {
     public PageResponse<SeasonResponse> getSeasonsByAnimeId(Long animeId, Pageable pageable) {
 
         if (!animeRepository.existsById(animeId)) {
-            throw new EntityNotFoundException("Anime not found");
+            throw new AnimeNotFoundException(animeId);
         }
 
         return PageResponse.from(
@@ -64,13 +66,13 @@ public class SeasonServiceImpl implements SeasonService {
     public void deleteSeason(Long animeId, Long seasonId) {
 
         Anime anime = animeRepository.findById(animeId)
-                .orElseThrow(() -> new EntityNotFoundException("Anime not found"));
+                .orElseThrow(() -> new AnimeNotFoundException(animeId));
 
         Season season = seasonRepository.findById(seasonId)
-                .orElseThrow(() -> new EntityNotFoundException("Season not found"));
+                .orElseThrow(() -> new SeasonNotFoundException(seasonId));
 
         if (!season.getAnime().getId().equals(anime.getId())) {
-            throw new IllegalStateException("Season does not belong to this anime");
+            throw new SeasonDoesNotBelongToAnimeException(animeId, seasonId);
         }
 
         if (episodeRepository.existsBySeasonId(seasonId)) {
@@ -84,7 +86,7 @@ public class SeasonServiceImpl implements SeasonService {
     @Transactional(readOnly = true)
     public SeasonDetailResponse getSeasonDetail(Long seasonId) {
         Season season = seasonRepository.findById(seasonId)
-                .orElseThrow(() -> new EntityNotFoundException("Season not found"));
+                .orElseThrow(() -> new SeasonNotFoundException(seasonId));
 
         return seasonMapper.toDetailResponse(season);
     }

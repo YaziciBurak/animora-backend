@@ -29,7 +29,7 @@ public class GlobalExceptionHandler {
                 .body(ErrorResponse.builder()
                         .status(HttpStatus.FORBIDDEN.value())
                         .error(ErrorCode.FORBIDDEN)
-                        .message("You do not have permission to access this resource")
+                        .message(ex.getMessage())
                         .path(request.getRequestURI())
                         .timeStamp(LocalDateTime.now())
                         .build());
@@ -44,7 +44,7 @@ public class GlobalExceptionHandler {
                 .body(ErrorResponse.builder()
                         .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
                         .error(ErrorCode.INTERNAL_SERVER_ERROR)
-                        .message("Unexpected error occurred")
+                        .message(ex.getMessage())
                         .path(request.getRequestURI())
                         .timeStamp(LocalDateTime.now())
                         .build());

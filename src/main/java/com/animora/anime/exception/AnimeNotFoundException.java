@@ -5,13 +5,13 @@ import com.animora.common.exception.enums.ErrorCode;
 import com.animora.common.exception.enums.ErrorMessage;
 import org.springframework.http.HttpStatus;
 
-public class AnimeHasSeasonsException extends BusinessException {
+public class AnimeNotFoundException extends BusinessException {
 
-    public AnimeHasSeasonsException(Long animeId) {
+    public AnimeNotFoundException(Long animeId) {
         super(
-                HttpStatus.CONFLICT,
-                ErrorCode.ANIME_HAS_SEASONS,
-                ErrorMessage.ANIME_HAS_SEASONS,
+                HttpStatus.NOT_FOUND,
+                ErrorCode.ANIME_NOT_FOUND,
+                ErrorMessage.ANIME_NOT_FOUND,
                 animeId
         );
     }

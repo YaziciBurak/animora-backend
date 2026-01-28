@@ -3,6 +3,8 @@ package com.animora.genre.service.impl;
 import com.animora.genre.dto.GenreRequest;
 import com.animora.genre.dto.GenreResponse;
 import com.animora.genre.entity.Genre;
+import com.animora.genre.exception.GenreAlreadyExistsException;
+import com.animora.genre.exception.GenreNotFoundException;
 import com.animora.genre.repository.GenreRepository;
 import com.animora.genre.service.GenreService;
 import jakarta.transaction.Transactional;
@@ -22,7 +24,7 @@ public class GenreServiceImpl implements GenreService {
     @Override
     public GenreResponse createGenre(GenreRequest request) {
         if (genreRepository.existsByName(request.getName())) {
-            throw new RuntimeException("Genre already exists: " + request.getName());
+            throw new GenreAlreadyExistsException(request.getName());
         }
 
         Genre genre = Genre.builder()
@@ -36,7 +38,7 @@ public class GenreServiceImpl implements GenreService {
     @Override
     public GenreResponse getGenreById(Long id) {
         Genre genre = genreRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Genre not found with id: " + id));
+                .orElseThrow(() -> new GenreNotFoundException(id));
         return mapToResponse(genre);
     }
 
@@ -51,7 +53,7 @@ public class GenreServiceImpl implements GenreService {
     @Override
     public GenreResponse updateGenre(Long id, GenreRequest request) {
         Genre genre = genreRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Genre not found with id:" + id));
+                .orElseThrow(() -> new GenreNotFoundException(id));
 
         genre.setName(request.getName());
         Genre updated = genreRepository.save(genre);
@@ -61,7 +63,7 @@ public class GenreServiceImpl implements GenreService {
     @Override
     public void deleteGenre(Long id) {
         if (!genreRepository.existsById(id)) {
-            throw new RuntimeException("Genre not found with id: " + id);
+            throw new GenreNotFoundException(id);
         }
         genreRepository.deleteById(id);
     }

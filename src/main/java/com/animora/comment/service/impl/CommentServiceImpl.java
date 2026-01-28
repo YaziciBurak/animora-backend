@@ -1,10 +1,12 @@
 package com.animora.comment.service.impl;
 
 import com.animora.anime.entity.Anime;
+import com.animora.anime.exception.AnimeNotFoundException;
 import com.animora.anime.repository.AnimeRepository;
 import com.animora.comment.dto.CommentRequest;
 import com.animora.comment.dto.CommentResponse;
 import com.animora.comment.entity.Comment;
+import com.animora.comment.exception.CommentNotFoundException;
 import com.animora.comment.mapper.CommentMapper;
 import com.animora.comment.repository.CommentRepository;
 import com.animora.comment.service.CommentService;
@@ -32,7 +34,7 @@ public class CommentServiceImpl implements CommentService {
     public CommentResponse createComment(Long animeId, Long userId, CommentRequest request) {
 
         Anime anime = animeRepository.findById(animeId)
-                .orElseThrow(() -> new EntityNotFoundException("Anime not found"));
+                .orElseThrow(() -> new AnimeNotFoundException(animeId));
 
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException("User not found"));
@@ -49,7 +51,7 @@ public class CommentServiceImpl implements CommentService {
     public List<CommentResponse> getCommentsByAnime(Long animeId) {
 
         if (!animeRepository.existsById(animeId)) {
-            throw new EntityNotFoundException("Anime not found");
+            throw new AnimeNotFoundException(animeId);
         }
 
         return commentRepository.findByAnimeId(animeId)
@@ -62,7 +64,7 @@ public class CommentServiceImpl implements CommentService {
     public void deleteComment(Long commentId) {
 
         Comment comment = commentRepository.findById(commentId)
-                        .orElseThrow(() -> new EntityNotFoundException("Comment not found"));
+                        .orElseThrow(() -> new CommentNotFoundException(commentId));
 
         commentRepository.delete(comment);
     }
