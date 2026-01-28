@@ -20,7 +20,6 @@ public class GenreController {
     private final GenreService genreService;
 
     @PostMapping
-    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<GenreResponse> createGenre(@Valid @RequestBody GenreRequest request) {
         return ResponseEntity.ok(genreService.createGenre(request));
     }

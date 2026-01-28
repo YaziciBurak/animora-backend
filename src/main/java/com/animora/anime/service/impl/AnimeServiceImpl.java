@@ -6,12 +6,12 @@ import com.animora.anime.dto.AnimeResponse;
 import com.animora.anime.entity.Anime;
 import com.animora.anime.exception.AnimeAlreadyExistsException;
 import com.animora.anime.exception.AnimeHasSeasonsException;
+import com.animora.anime.exception.AnimeNotFoundException;
 import com.animora.anime.mapper.AnimeMapper;
 import com.animora.anime.repository.AnimeRepository;
 import com.animora.anime.service.AnimeService;
 import com.animora.season.entity.Season;
 import com.animora.season.repository.SeasonRepository;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -54,7 +54,7 @@ public class AnimeServiceImpl implements AnimeService {
     @Override
     public AnimeResponse getAnimeById(Long id) {
         Anime anime = animeRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Not found: " +id));
+                .orElseThrow(() -> new AnimeNotFoundException(id));
         return animeMapper.toResponse(anime);
     }
 
@@ -69,7 +69,7 @@ public class AnimeServiceImpl implements AnimeService {
     @Override
     public AnimeResponse updateAnime(Long id, AnimeRequest request) {
         Anime anime = animeRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Not found: " + id));
+                .orElseThrow(() -> new AnimeNotFoundException(id));
 
         anime.setTitle(request.getTitle());
         anime.setDescription(request.getDescription());
@@ -87,7 +87,7 @@ public class AnimeServiceImpl implements AnimeService {
     public AnimeDetailResponse getAnimeDetail(Long animeId) {
 
         Anime anime = animeRepository.findById(animeId)
-                .orElseThrow(() -> new EntityNotFoundException("Anime not found"));
+                .orElseThrow(() -> new AnimeNotFoundException(animeId));
 
         return animeMapper.toDetailResponse(anime);
     }
@@ -96,7 +96,7 @@ public class AnimeServiceImpl implements AnimeService {
     public void deleteAnime(Long id) {
 
         Anime anime = animeRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Anime not found: " + id));
+                .orElseThrow(() -> new AnimeNotFoundException(id));
 
         if (seasonRepository.existsByAnime_Id(id)) {
             throw new AnimeHasSeasonsException(id);

@@ -1,18 +1,18 @@
-package com.animora.anime.exception;
+package com.animora.genre.exception;
 
 import com.animora.common.exception.BusinessException;
 import com.animora.common.exception.enums.ErrorCode;
 import com.animora.common.exception.enums.ErrorMessage;
 import org.springframework.http.HttpStatus;
 
-public class AnimeAlreadyExistsException extends BusinessException {
+public class GenreAlreadyExistsException extends BusinessException {
 
-    public AnimeAlreadyExistsException(String title) {
+    public GenreAlreadyExistsException(String name) {
         super(
                 HttpStatus.BAD_REQUEST,
-                ErrorCode.ANIME_ALREADY_EXISTS,
-                ErrorMessage.ANIME_ALREADY_EXISTS,
-                title
+                ErrorCode.GENRE_ALREADY_EXISTS,
+                ErrorMessage.GENRE_ALREADY_EXISTS,
+                name
         );
     }
 }

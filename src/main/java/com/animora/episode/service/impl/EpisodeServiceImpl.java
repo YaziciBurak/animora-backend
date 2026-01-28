@@ -5,13 +5,14 @@ import com.animora.episode.dto.EpisodeRequest;
 import com.animora.episode.dto.EpisodeResponse;
 import com.animora.episode.entity.Episode;
 import com.animora.episode.exception.EpisodeAlreadyExistsException;
+import com.animora.episode.exception.EpisodeNotFoundException;
 import com.animora.episode.exception.EpisodeNotInSeasonException;
 import com.animora.episode.mapper.EpisodeMapper;
 import com.animora.episode.repository.EpisodeRepository;
 import com.animora.episode.service.EpisodeService;
 import com.animora.season.entity.Season;
+import com.animora.season.exception.SeasonNotFoundException;
 import com.animora.season.repository.SeasonRepository;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -31,7 +32,7 @@ public class EpisodeServiceImpl implements EpisodeService {
     public EpisodeResponse createEpisodeToSeason(Long seasonId, EpisodeRequest request) {
 
         Season season = seasonRepository.findById(seasonId)
-                .orElseThrow(() -> new EntityNotFoundException("Season not found" + seasonId));
+                .orElseThrow(() -> new SeasonNotFoundException(seasonId));
 
         if (episodeRepository.existsBySeasonIdAndEpisodeNumber(seasonId, request.getEpisodeNumber())) {
             throw new EpisodeAlreadyExistsException(request.getEpisodeNumber());
@@ -50,7 +51,7 @@ public class EpisodeServiceImpl implements EpisodeService {
     public PageResponse<EpisodeResponse> getEpisodesBySeasonId(Long seasonId, Pageable pageable) {
 
         if (!seasonRepository.existsById(seasonId)) {
-            throw new EntityNotFoundException("Season not found:" + seasonId);
+            throw new SeasonNotFoundException(seasonId);
         }
 
         return PageResponse.from(
@@ -63,7 +64,7 @@ public class EpisodeServiceImpl implements EpisodeService {
     public EpisodeResponse updateEpisode(Long seasonId, Long episodeId, EpisodeRequest request) {
 
         Episode episode = episodeRepository.findById(episodeId)
-                .orElseThrow(() -> new EntityNotFoundException("Episode not found: " + episodeId));
+                .orElseThrow(() -> new EpisodeNotFoundException(episodeId));
 
         if (!episode.getSeason().getId().equals(seasonId)) {
             throw new EpisodeNotInSeasonException(episodeId,seasonId);
@@ -89,13 +90,13 @@ public class EpisodeServiceImpl implements EpisodeService {
     public void deleteEpisode(Long seasonId, Long episodeId) {
 
         Season season = seasonRepository.findById(seasonId)
-                .orElseThrow(() -> new EntityNotFoundException("Season not found: " + seasonId));
+                .orElseThrow(() -> new SeasonNotFoundException(seasonId));
 
         Episode episode = episodeRepository.findById(episodeId)
-                .orElseThrow(() -> new EntityNotFoundException("Episode not found: " + episodeId));
+                .orElseThrow(() -> new EpisodeNotFoundException(episodeId));
 
         if (!episode.getSeason().getId().equals(season.getId())) {
-            throw new IllegalStateException("Episode does not belong to this season");
+            throw new EpisodeNotInSeasonException(episodeId, seasonId);
         }
 
         episodeRepository.delete(episode);
