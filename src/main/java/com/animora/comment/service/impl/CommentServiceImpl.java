@@ -11,8 +11,8 @@ import com.animora.comment.mapper.CommentMapper;
 import com.animora.comment.repository.CommentRepository;
 import com.animora.comment.service.CommentService;
 import com.animora.user.entity.User;
+import com.animora.user.exception.UserNotFoundException;
 import com.animora.user.repository.UserRepository;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,7 +37,7 @@ public class CommentServiceImpl implements CommentService {
                 .orElseThrow(() -> new AnimeNotFoundException(animeId));
 
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new EntityNotFoundException("User not found"));
+                .orElseThrow(() -> new UserNotFoundException(userId));
 
         Comment comment = commentMapper.toEntity(request, anime, user);
 
