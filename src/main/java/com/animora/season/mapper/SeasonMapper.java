@@ -40,4 +40,9 @@ public class SeasonMapper {
                 )
                 .build();
     }
+
+    public void updateEntityFromRequest(SeasonRequest request, Season season) {
+        season.setSeasonNumber(request.getSeasonNumber());
+        season.setReleaseYear(request.getReleaseYear());
+    }
 }

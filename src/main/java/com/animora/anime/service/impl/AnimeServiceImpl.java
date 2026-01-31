@@ -67,19 +67,25 @@ public class AnimeServiceImpl implements AnimeService {
     }
 
     @Override
+    @Transactional
     public AnimeResponse updateAnime(Long id, AnimeRequest request) {
+
         Anime anime = animeRepository.findById(id)
                 .orElseThrow(() -> new AnimeNotFoundException(id));
 
-        anime.setTitle(request.getTitle());
-        anime.setDescription(request.getDescription());
-        anime.setStatus(request.getStatus());
-        anime.setReleaseDate(request.getReleaseDate());
-        anime.setCoverImage(request.getCoverImage());
+        String newTitle = request.getTitle().trim();
 
-        animeRepository.save(anime);
+        if (!anime.getTitle().equalsIgnoreCase(newTitle) &&
+                animeRepository.existsByTitleIgnoreCaseAndIdNot(newTitle, id)) {
 
-        return animeMapper.toResponse(anime);
+            throw new AnimeAlreadyExistsException(newTitle);
+        }
+
+        animeMapper.updateEntityFromRequest(request, anime);
+
+        Anime updatedAnime = animeRepository.save(anime);
+
+        return animeMapper.toResponse(updatedAnime);
     }
 
     @Override

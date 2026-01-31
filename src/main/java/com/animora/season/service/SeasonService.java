@@ -16,5 +16,7 @@ public interface SeasonService {
 
     void deleteSeason(Long animeId, Long seasonId);
 
+    SeasonResponse updateSeason(Long animeId, Long seasonId, SeasonRequest request);
+
     SeasonDetailResponse getSeasonDetail(Long seasonId);
 }

@@ -7,4 +7,6 @@ public interface AnimeRepository extends JpaRepository<Anime, Long> {
 
     boolean existsByTitleIgnoreCase(String title);
 
+    boolean existsByTitleIgnoreCaseAndIdNot(String title, Long id);
+
 }
