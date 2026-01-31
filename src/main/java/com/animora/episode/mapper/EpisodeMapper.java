@@ -28,4 +28,12 @@ public class EpisodeMapper {
                 .videoUrl(episode.getVideoUrl())
                 .build();
     }
+
+    public void updateEntityFromRequest(EpisodeRequest request, Episode episode) {
+        episode.setEpisodeNumber(request.getEpisodeNumber());
+        episode.setTitle(request.getTitle());
+        episode.setDuration(request.getDuration());
+        episode.setAirDate(request.getAirDate());
+        episode.setVideoUrl(request.getVideoUrl());
+    }
 }

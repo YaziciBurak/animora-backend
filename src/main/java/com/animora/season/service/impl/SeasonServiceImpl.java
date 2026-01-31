@@ -63,6 +63,39 @@ public class SeasonServiceImpl implements SeasonService {
     }
 
     @Override
+    @Transactional
+    public SeasonResponse updateSeason(Long animeId, Long seasonId, SeasonRequest request) {
+
+        Season season = seasonRepository.findById(seasonId)
+                .orElseThrow(() -> new SeasonNotFoundException(seasonId));
+
+        int newSeasonNumber = request.getSeasonNumber();
+
+        if (season.getSeasonNumber() != newSeasonNumber &&
+                seasonRepository.existsByAnimeAndSeasonNumberAndIdNot(
+                        season.getAnime(),
+                        newSeasonNumber,
+                        seasonId)) {
+
+            throw new SeasonAlreadyExistsException(newSeasonNumber);
+        }
+
+        if (seasonRepository.existsByAnimeAndSeasonNumberAndIdNot(
+                season.getAnime(),
+                request.getSeasonNumber(),
+                seasonId
+        )) {
+            throw new SeasonAlreadyExistsException(request.getSeasonNumber());
+        }
+
+        seasonMapper.updateEntityFromRequest(request, season);
+
+        Season updated = seasonRepository.save(season);
+
+        return seasonMapper.toResponse(updated);
+    }
+
+    @Override
     public void deleteSeason(Long animeId, Long seasonId) {
 
         Anime anime = animeRepository.findById(animeId)

@@ -48,6 +48,14 @@ public class AnimeMapper {
                 .build();
     }
 
+    public void updateEntityFromRequest(AnimeRequest request, Anime anime) {
+        anime.setTitle(request.getTitle().trim());
+        anime.setDescription(request.getDescription());
+        anime.setReleaseDate(request.getReleaseDate());
+        anime.setStatus(request.getStatus());
+        anime.setCoverImage(request.getCoverImage());
+    }
+
     public AnimeDetailResponse toDetailResponse(Anime anime) {
         return AnimeDetailResponse.builder()
                 .id(anime.getId())

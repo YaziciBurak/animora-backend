@@ -42,6 +42,16 @@ public class SeasonController {
         return seasonService.getSeasonsByAnimeId(animeId, pageable);
     }
 
+    @PutMapping("/{seasonId}")
+    public ResponseEntity<SeasonResponse> updateSeason(
+            @PathVariable Long animeId,
+            @PathVariable Long seasonId,
+            @Valid @RequestBody SeasonRequest request
+    ) {
+        SeasonResponse response = seasonService.updateSeason(animeId, seasonId, request);
+        return ResponseEntity.ok(response);
+    }
+
     @DeleteMapping("/{seasonId}")
     public ResponseEntity<Void> deleteSeason (
             @PathVariable Long animeId,

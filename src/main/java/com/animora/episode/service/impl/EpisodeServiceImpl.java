@@ -61,6 +61,7 @@ public class EpisodeServiceImpl implements EpisodeService {
     }
 
     @Override
+    @Transactional
     public EpisodeResponse updateEpisode(Long seasonId, Long episodeId, EpisodeRequest request) {
 
         Episode episode = episodeRepository.findById(episodeId)
@@ -70,20 +71,22 @@ public class EpisodeServiceImpl implements EpisodeService {
             throw new EpisodeNotInSeasonException(episodeId,seasonId);
         }
 
-        if (episodeRepository.existsBySeasonIdAndEpisodeNumberAndIdNot(
-                seasonId,
-                request.getEpisodeNumber(),
-                episodeId)) {
-            throw new EpisodeAlreadyExistsException(request.getEpisodeNumber());
+        int newEpisodeNumber = request.getEpisodeNumber();
+
+        if (episode.getEpisodeNumber() != newEpisodeNumber &&
+                episodeRepository.existsBySeasonIdAndEpisodeNumberAndIdNot(
+                        seasonId,
+                        newEpisodeNumber,
+                        episodeId)) {
+
+            throw new EpisodeAlreadyExistsException(newEpisodeNumber);
         }
 
-        episode.setEpisodeNumber(request.getEpisodeNumber());
-        episode.setTitle(request.getTitle());
-        episode.setDuration(request.getDuration());
-        episode.setAirDate(request.getAirDate());
-        episode.setVideoUrl(request.getVideoUrl());
+        episodeMapper.updateEntityFromRequest(request, episode);
 
-        return episodeMapper.toResponse(episode);
+        Episode updated = episodeRepository.save(episode);
+
+        return episodeMapper.toResponse(updated);
     }
 
     @Override

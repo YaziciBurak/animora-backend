@@ -13,5 +13,7 @@ public interface SeasonRepository extends JpaRepository<Season, Long> {
 
     boolean existsByAnimeAndSeasonNumber(Anime anime, int seasonNumber);
 
+    boolean existsByAnimeAndSeasonNumberAndIdNot(Anime anime, int seasonNumber, Long id);
+
     boolean existsByAnime_Id(Long animeId);
 }

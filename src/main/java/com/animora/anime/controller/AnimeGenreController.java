@@ -8,13 +8,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/animes")
+@RequestMapping("/api/animes/genres")
 @RequiredArgsConstructor
 public class AnimeGenreController {
 
     private final AnimeGenreService animeGenreService;
 
-    @PostMapping("/{animeId}/genres")
+    @PostMapping("/{animeId}")
     public ResponseEntity<Void> createGenresToAnime(@PathVariable Long animeId,
                                                  @RequestBody @Valid AnimeGenreRequest request) {
         animeGenreService.createGenresToAnime(animeId, request.getGenreIds());
