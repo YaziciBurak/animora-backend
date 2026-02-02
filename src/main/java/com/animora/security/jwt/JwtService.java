@@ -37,8 +37,14 @@ public class JwtService {
     }
 
     @SuppressWarnings("unchecked")
-    public List<String> extractRoles(String token) {
-        return tokenProvider.parseClaims(token)
-                .get("roles", List.class);
+    public List<String> extractAuthorities(String token) {
+        Claims claims = tokenProvider.parseClaims(token);
+        Object authorities = claims.get("authorities");
+
+        if (authorities == null) {
+            return List.of();
+        }
+
+        return (List<String>) authorities;
     }
 }

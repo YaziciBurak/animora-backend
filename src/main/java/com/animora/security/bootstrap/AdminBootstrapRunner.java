@@ -39,11 +39,8 @@ public class AdminBootstrapRunner implements CommandLineRunner {
     @Override
     public void run(String... args) {
 
-        Role userRole = roleRepository.findByName("ROLE_USER")
-                .orElseGet(() -> roleRepository.save(Role.builder().name("ROLE_USER").build()));
-
         Role adminRole = roleRepository.findByName("ROLE_ADMIN")
-                .orElseGet(() -> roleRepository.save(Role.builder().name("ROLE_ADMIN").build()));
+                .orElseThrow(() -> new RuntimeException("ROLE_ADMIN not found"));
 
         if(userRepository.existsByEmail(adminEmail)) {
             return;
@@ -54,7 +51,7 @@ public class AdminBootstrapRunner implements CommandLineRunner {
                 .username(adminUsername)
                 .password(passwordEncoder.encode(adminPassword))
                 .createdAt(LocalDateTime.now())
-                .roles(Set.of(userRole, adminRole))
+                .roles(Set.of(adminRole))
                 .build();
 
         userRepository.save(admin);

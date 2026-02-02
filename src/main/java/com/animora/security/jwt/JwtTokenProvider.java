@@ -1,6 +1,6 @@
 package com.animora.security.jwt;
 
-import com.animora.domain.entiy.Role;
+import com.animora.domain.entiy.Permission;
 import com.animora.user.entity.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -28,15 +28,16 @@ public class JwtTokenProvider {
 
     public String generateToken(User user) {
 
-        List<String> roles = user.getRoles()
-                .stream()
-                .map(Role::getName)
+        List<String> authorities = user.getRoles().stream()
+                .flatMap(role -> role.getPermissions().stream())
+                .map(Permission::getName)
+                .distinct()
                 .toList();
 
         return Jwts.builder()
                 .setSubject(user.getEmail())
                 .claim("userId", user.getId())
-                .claim("roles", roles)
+                .claim("authorities", authorities)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + jwtExpirationMs))
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256)

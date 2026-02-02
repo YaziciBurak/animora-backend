@@ -42,7 +42,7 @@ public class AuthService {
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        User user = userRepository.findByEmail(request.email())
+        User user = userRepository.findByEmailWithRolesAndPermissions(request.email())
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
         String token = jwtService.generateToken(user);
@@ -73,7 +73,10 @@ public class AuthService {
 
         userRepository.save(user);
 
-        String token = jwtService.generateToken(user);
+        User savedUser = userRepository.findByEmailWithRolesAndPermissions(user.getEmail())
+                .orElseThrow();
+
+        String token = jwtService.generateToken(savedUser);
 
         return new RegisterResponse(token);
      }
