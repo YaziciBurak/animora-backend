@@ -20,6 +20,7 @@ public class GenreController {
     private final GenreService genreService;
 
     @PostMapping
+    @PreAuthorize("hasAuthority('ANIME_CREATE')")
     public ResponseEntity<GenreResponse> createGenre(@Valid @RequestBody GenreRequest request) {
         return ResponseEntity.ok(genreService.createGenre(request));
     }
@@ -30,7 +31,7 @@ public class GenreController {
     }
 
     @GetMapping
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasAuthority('ANIME_READ')")
     public ResponseEntity<List<GenreResponse>> getAllGenres() {
         return ResponseEntity.ok(genreService.getAllGenres());
     }
