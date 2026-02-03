@@ -7,12 +7,12 @@ import org.springframework.http.HttpStatus;
 
 public class UserNotFoundException extends BusinessException {
 
-    public UserNotFoundException(Long userId) {
+    public UserNotFoundException() {
         super(
                 HttpStatus.NOT_FOUND,
                 ErrorCode.USER_NOT_FOUND,
-                ErrorMessage.USER_NOT_FOUND,
-                userId
+                ErrorMessage.USER_NOT_FOUND
+
         );
     }
 }

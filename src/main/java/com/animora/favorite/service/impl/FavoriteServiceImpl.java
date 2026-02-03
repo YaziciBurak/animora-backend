@@ -34,7 +34,7 @@ public class FavoriteServiceImpl implements FavoriteService {
     public FavoriteResponse createFavorite(Long userId, Long animeId) {
 
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new UserNotFoundException(userId));
+                .orElseThrow(UserNotFoundException::new);
 
         Anime anime = animeRepository.findById(animeId)
                 .orElseThrow(() -> new AnimeNotFoundException(animeId));
@@ -57,13 +57,13 @@ public class FavoriteServiceImpl implements FavoriteService {
     public void removeFavorite(Long userId, Long animeId) {
 
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new UserNotFoundException(userId));
+                .orElseThrow(UserNotFoundException::new);
 
         Anime anime = animeRepository.findById(animeId)
                 .orElseThrow(() -> new AnimeNotFoundException(animeId));
 
         Favorite favorite = favoriteRepository.findByUserAndAnime(user, anime)
-                .orElseThrow(() -> new FavoriteNotFoundException(userId,animeId));
+                .orElseThrow(() -> new FavoriteNotFoundException(animeId));
 
         favoriteRepository.delete(favorite);
     }
@@ -73,7 +73,7 @@ public class FavoriteServiceImpl implements FavoriteService {
     public List<FavoriteResponse> getUserFavorites(Long userId) {
 
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new UserNotFoundException(userId));
+                .orElseThrow(UserNotFoundException::new);
 
         return favoriteRepository.findByUser(user)
                 .stream()

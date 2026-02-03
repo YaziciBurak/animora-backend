@@ -4,14 +4,18 @@ import com.animora.domain.entiy.Permission;
 import com.animora.domain.entiy.Role;
 import com.animora.domain.repository.PermissionRepository;
 import com.animora.domain.repository.RoleRepository;
+import com.animora.security.permission.PermissionType;
+import com.animora.security.permission.RoleType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 import java.util.Set;
 
 @Component
 @RequiredArgsConstructor
+@Order(1)
 public class PermissionBootstrapRunner implements CommandLineRunner {
 
     private final PermissionRepository permissionRepository;
@@ -20,24 +24,26 @@ public class PermissionBootstrapRunner implements CommandLineRunner {
     @Override
     public void run(String... args) {
 
-        Permission animeCreate = createPermission("ANIME_CREATE");
-        Permission animeRead = createPermission("ANIME_READ");
-        Permission animeUpdate = createPermission("ANIME_UPDATE");
-        Permission animeDelete = createPermission("ANIME_DELETE");
+        for (PermissionType type : PermissionType.values()) {
+            permissionRepository.findByName(type.name())
+                    .orElseGet(() -> permissionRepository.save(
+                            Permission.builder().name(type.name()).build()
+                    ));
+        }
 
-        createRoleIfNotFound("ROLE_USER", Set.of(animeRead));
+        Set<Permission> userPermissions = Set.of(
+                permissionRepository.findByName(PermissionType.ANIME_READ.name()).orElseThrow(),
+                permissionRepository.findByName(PermissionType.COMMENT_CREATE.name()).orElseThrow(),
+                permissionRepository.findByName(PermissionType.COMMENT_READ.name()).orElseThrow(),
+                permissionRepository.findByName(PermissionType.COMMENT_DELETE.name()).orElseThrow(),
+                permissionRepository.findByName(PermissionType.FAVORITE_ADD.name()).orElseThrow()
+        );
 
-        createRoleIfNotFound("ROLE_ADMIN", Set.of(
-                animeCreate,
-                animeRead,
-                animeUpdate,
-                animeDelete
-        ));
-    }
+        createRoleIfNotFound(RoleType.ROLE_USER.name(), userPermissions);
 
-    private Permission createPermission(String name) {
-        return permissionRepository.findByName(name)
-                .orElseGet(() -> permissionRepository.save(Permission.builder().name(name).build()));
+        Set<Permission> allPermissions = Set.copyOf(permissionRepository.findAll());
+
+        createRoleIfNotFound(RoleType.ROLE_ADMIN.name(), allPermissions);
     }
 
     private void createRoleIfNotFound(String roleName, Set<Permission> permissions) {

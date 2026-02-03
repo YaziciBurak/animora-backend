@@ -5,6 +5,7 @@ import com.animora.anime.service.AnimeGenreService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -15,6 +16,7 @@ public class AnimeGenreController {
     private final AnimeGenreService animeGenreService;
 
     @PostMapping("/{animeId}")
+    @PreAuthorize("hasAuthority('ANIME_CREATE')")
     public ResponseEntity<Void> createGenresToAnime(@PathVariable Long animeId,
                                                  @RequestBody @Valid AnimeGenreRequest request) {
         animeGenreService.createGenresToAnime(animeId, request.getGenreIds());

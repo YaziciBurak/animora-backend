@@ -2,12 +2,14 @@ package com.animora.security.bootstrap;
 
 import com.animora.domain.entiy.Role;
 import com.animora.domain.repository.RoleRepository;
+import com.animora.security.permission.RoleType;
 import com.animora.user.entity.User;
 import com.animora.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
@@ -21,6 +23,7 @@ import java.util.Set;
         havingValue = "true",
         matchIfMissing = false
 )
+@Order(2)
 public class AdminBootstrapRunner implements CommandLineRunner {
 
     private final RoleRepository roleRepository;
@@ -39,7 +42,7 @@ public class AdminBootstrapRunner implements CommandLineRunner {
     @Override
     public void run(String... args) {
 
-        Role adminRole = roleRepository.findByName("ROLE_ADMIN")
+        Role adminRole = roleRepository.findByName(RoleType.ROLE_ADMIN.name())
                 .orElseThrow(() -> new RuntimeException("ROLE_ADMIN not found"));
 
         if(userRepository.existsByEmail(adminEmail)) {
