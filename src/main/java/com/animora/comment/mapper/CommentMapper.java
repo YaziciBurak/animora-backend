@@ -10,10 +10,10 @@ import org.springframework.stereotype.Component;
 @Component
 public class CommentMapper {
 
-    public Comment toEntity(CommentRequest request, Anime anime, User user) {
+    public Comment toEntity(CommentRequest request, Anime anime, User authenticatedUser) {
         return Comment.builder()
                 .anime(anime)
-                .user(user)
+                .user(authenticatedUser)
                 .content(request.getContent())
                 .build();
     }

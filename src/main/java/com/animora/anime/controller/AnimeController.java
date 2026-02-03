@@ -8,6 +8,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,29 +21,34 @@ public class AnimeController {
     private final AnimeService animeService;
 
     @PostMapping
+    @PreAuthorize("hasAuthority('ANIME_CREATE')")
     public ResponseEntity<AnimeResponse> createAnime(@Valid @RequestBody AnimeRequest request) {
         AnimeResponse response = animeService.createAnime(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAuthority('ANIME_READ')")
     public ResponseEntity<AnimeResponse> getAnime(@PathVariable Long id) {
         AnimeResponse response = animeService.getAnimeById(id);
         return ResponseEntity.ok(response);
     }
 
     @GetMapping("/{id}/detail")
+    @PreAuthorize("hasAuthority('ANIME_READ')")
     public ResponseEntity<AnimeDetailResponse> getAnimeDetail(@PathVariable Long id) {
         return ResponseEntity.ok(animeService.getAnimeDetail(id));
     }
 
     @GetMapping
+    @PreAuthorize("hasAuthority('ANIME_READ')")
     public ResponseEntity<List<AnimeResponse>> getAllAnime() {
         List<AnimeResponse> responses = animeService.getAllAnime();
         return ResponseEntity.ok(responses);
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAuthority('ANIME_UPDATE')")
     public ResponseEntity<AnimeResponse> updateAnime(
             @PathVariable Long id,@Valid @RequestBody AnimeRequest request) {
         AnimeResponse response = animeService.updateAnime(id, request);
@@ -50,6 +56,7 @@ public class AnimeController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('ANIME_DELETE')")
     public ResponseEntity<Void> deleteAnime(@PathVariable Long id) {
         animeService.deleteAnime(id);
         return ResponseEntity.noContent().build();

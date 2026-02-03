@@ -19,6 +19,7 @@ public enum ErrorMessage {
     SEASON_DOES_NOT_BELONG_TO_ANIME("Season with id: %d does not belong to anime with id: %d"),
 
     COMMENT_NOT_FOUND("Comment not found with id: %d"),
+    FORBIDDEN_COMMENT_DELETE("You are not allowed to delete this comment"),
 
     FAVORITE_NOT_FOUND("Favorite not found for user id: %d and anime id: %d"),
     FAVORITE_ALREADY_EXISTS("Anime already in favorites. userId: %d, animeId: %d"),

@@ -6,6 +6,7 @@ import com.animora.comment.service.CommentService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,17 +19,17 @@ public class CommentController {
     private final CommentService commentService;
 
     @PostMapping("/{animeId}/comments")
+    @PreAuthorize("hasAuthority('COMMENT_CREATE')")
     public ResponseEntity<CommentResponse> createComment(
             @PathVariable Long animeId,
-            @RequestParam Long userId,
             @Valid @RequestBody CommentRequest request
             ) {
-        CommentResponse response = commentService.createComment(animeId, userId, request);
-
+        CommentResponse response = commentService.createComment(animeId, request);
         return ResponseEntity.ok(response);
     }
 
     @GetMapping("/{animeId}/comments")
+    @PreAuthorize("hasAuthority('COMMENT_READ')")
     public ResponseEntity<List<CommentResponse>> getCommentsByAnime(
             @PathVariable Long animeId
     ) {
@@ -37,7 +38,9 @@ public class CommentController {
         return ResponseEntity.ok(responses);
     }
 
+
     @DeleteMapping("/comments/{commentId}")
+    @PreAuthorize("hasAuthority('COMMENT_DELETE_OWN') or hasAuthority('COMMENT_DELETE_ANY')")
     public ResponseEntity<Void> deleteComment(
             @PathVariable Long commentId
     ) {

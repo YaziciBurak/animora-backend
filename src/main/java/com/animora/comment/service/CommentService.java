@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface CommentService {
 
-    CommentResponse createComment(Long animeId, Long userId, CommentRequest request);
+    CommentResponse createComment(Long animeId, CommentRequest request);
 
     List<CommentResponse> getCommentsByAnime(Long animeId);
 
