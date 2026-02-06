@@ -69,13 +69,14 @@ public class CommentServiceImpl implements CommentService {
         Comment comment = commentRepository.findById(commentId)
                         .orElseThrow(() -> new CommentNotFoundException(commentId));
 
+        Long currentUserId = SecurityUtils.currentUserId();
+
         boolean isOwner =
-                comment.getUser().getEmail().equals(SecurityUtils.currentUserEmail());
+                comment.getUser().getId().equals(currentUserId);
 
-        boolean canDelete =
-                isOwner || SecurityUtils.hasPermission(PermissionType.COMMENT_DELETE);
+        boolean isAdmin = SecurityUtils.hasPermission(PermissionType.COMMENT_DELETE_ANY);
 
-        if (!canDelete) {
+        if (!isOwner && !isAdmin) {
             throw new CommentDeleteForbiddenException(commentId);
         }
 

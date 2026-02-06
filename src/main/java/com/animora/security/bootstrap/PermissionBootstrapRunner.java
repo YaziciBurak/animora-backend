@@ -32,10 +32,8 @@ public class PermissionBootstrapRunner implements CommandLineRunner {
         }
 
         Set<Permission> userPermissions = Set.of(
-                permissionRepository.findByName(PermissionType.ANIME_READ.name()).orElseThrow(),
                 permissionRepository.findByName(PermissionType.COMMENT_CREATE.name()).orElseThrow(),
-                permissionRepository.findByName(PermissionType.COMMENT_READ.name()).orElseThrow(),
-                permissionRepository.findByName(PermissionType.COMMENT_DELETE.name()).orElseThrow(),
+                permissionRepository.findByName(PermissionType.COMMENT_DELETE_OWN.name()).orElseThrow(),
                 permissionRepository.findByName(PermissionType.FAVORITE_ADD.name()).orElseThrow()
         );
 

@@ -29,7 +29,6 @@ public class CommentController {
     }
 
     @GetMapping("/{animeId}/comments")
-    @PreAuthorize("hasAuthority('COMMENT_READ')")
     public ResponseEntity<List<CommentResponse>> getCommentsByAnime(
             @PathVariable Long animeId
     ) {

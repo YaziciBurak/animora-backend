@@ -32,10 +32,6 @@ public class JwtService {
         return tokenProvider.parseClaims(token).getSubject();
     }
 
-    public Long extractUserId(String token) {
-        return tokenProvider.parseClaims(token).get("userId", Long.class);
-    }
-
     @SuppressWarnings("unchecked")
     public List<String> extractAuthorities(String token) {
         Claims claims = tokenProvider.parseClaims(token);
