@@ -26,13 +26,11 @@ public class GenreController {
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasAuthority('ANIME_READ')")
     public ResponseEntity<GenreResponse> getGenre(@PathVariable Long id) {
         return ResponseEntity.ok(genreService.getGenreById(id));
     }
 
     @GetMapping
-    @PreAuthorize("hasAuthority('ANIME_READ')")
     public ResponseEntity<List<GenreResponse>> getAllGenres() {
         return ResponseEntity.ok(genreService.getAllGenres());
     }

@@ -28,20 +28,17 @@ public class AnimeController {
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasAuthority('ANIME_READ')")
     public ResponseEntity<AnimeResponse> getAnime(@PathVariable Long id) {
         AnimeResponse response = animeService.getAnimeById(id);
         return ResponseEntity.ok(response);
     }
 
     @GetMapping("/{id}/detail")
-    @PreAuthorize("hasAuthority('ANIME_READ')")
     public ResponseEntity<AnimeDetailResponse> getAnimeDetail(@PathVariable Long id) {
         return ResponseEntity.ok(animeService.getAnimeDetail(id));
     }
 
     @GetMapping
-    @PreAuthorize("hasAuthority('ANIME_READ')")
     public ResponseEntity<List<AnimeResponse>> getAllAnime() {
         List<AnimeResponse> responses = animeService.getAllAnime();
         return ResponseEntity.ok(responses);
