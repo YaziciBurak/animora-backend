@@ -6,6 +6,7 @@ import com.animora.favorite.service.FavoriteService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,18 +19,18 @@ public class FavoriteController {
     private final FavoriteService favoriteService;
 
     @PostMapping
-    public ResponseEntity<FavoriteResponse> createFavorite(@PathVariable Long userId,
-                                                        @RequestBody FavoriteRequest request) {
+    @PreAuthorize("hasAuthority('FAVORITE_ADD')")
+    public ResponseEntity<FavoriteResponse> createFavorite(@RequestBody FavoriteRequest request) {
 
-        FavoriteResponse response = favoriteService.createFavorite(userId, request.getAnimeId());
+        FavoriteResponse response = favoriteService.createFavorite(request.getAnimeId());
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @DeleteMapping("/{animeId}")
-    public ResponseEntity<Void> removeFavorite(@PathVariable Long userId,
-                                               @PathVariable Long animeId) {
-        favoriteService.removeFavorite(userId, animeId);
+    @PreAuthorize("hasAuthority('FAVORITE_DELETE_OWN') or hasAuthority('FAVORITE_DELETE_ANY')")
+    public ResponseEntity<Void> removeFavorite(@PathVariable Long animeId) {
+        favoriteService.removeFavorite(animeId);
         return ResponseEntity.noContent().build();
     }
 

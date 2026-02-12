@@ -23,6 +23,7 @@ public enum ErrorMessage {
 
     FAVORITE_NOT_FOUND("Favorite not found for user id: %d and anime id: %d"),
     FAVORITE_ALREADY_EXISTS("Anime already in favorites. userId: %d, animeId: %d"),
+    FAVORITE_FORBIDDEN("You are not allowed to perform this action on favorite"),
 
     USER_NOT_FOUND("User not found with id: %d"),
 

@@ -12,7 +12,7 @@ public interface FavoriteRepository extends JpaRepository<Favorite, Long> {
 
     boolean existsByUserAndAnime(User user, Anime anime);
 
-    Optional<Favorite> findByUserAndAnime(User user, Anime anime);
+    Optional<Favorite> findByUserIdAndAnimeId(Long userId, Long animeId);
 
-    List<Favorite> findByUser(User user);
+    List<Favorite> findByUserId(Long userId);
 }

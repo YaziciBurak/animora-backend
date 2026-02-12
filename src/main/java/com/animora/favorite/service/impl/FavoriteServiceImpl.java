@@ -6,10 +6,13 @@ import com.animora.anime.repository.AnimeRepository;
 import com.animora.favorite.dto.FavoriteResponse;
 import com.animora.favorite.entity.Favorite;
 import com.animora.favorite.exception.FavoriteAlreadyExistsException;
+import com.animora.favorite.exception.FavoriteForbiddenException;
 import com.animora.favorite.exception.FavoriteNotFoundException;
 import com.animora.favorite.mapper.FavoriteMapper;
 import com.animora.favorite.repository.FavoriteRepository;
 import com.animora.favorite.service.FavoriteService;
+import com.animora.security.permission.PermissionType;
+import com.animora.security.util.SecurityUtils;
 import com.animora.user.entity.User;
 import com.animora.user.exception.UserNotFoundException;
 import com.animora.user.repository.UserRepository;
@@ -31,16 +34,18 @@ public class FavoriteServiceImpl implements FavoriteService {
 
 
     @Override
-    public FavoriteResponse createFavorite(Long userId, Long animeId) {
+    public FavoriteResponse createFavorite(Long animeId) {
 
-        User user = userRepository.findById(userId)
+        Long currentUserId = SecurityUtils.currentUserId();
+
+        User user = userRepository.findById(currentUserId)
                 .orElseThrow(UserNotFoundException::new);
 
         Anime anime = animeRepository.findById(animeId)
                 .orElseThrow(() -> new AnimeNotFoundException(animeId));
 
         if(favoriteRepository.existsByUserAndAnime(user, anime)) {
-            throw new FavoriteAlreadyExistsException(userId, animeId);
+            throw new FavoriteAlreadyExistsException(currentUserId, animeId);
         }
 
         Favorite favorite = Favorite.builder()
@@ -48,22 +53,24 @@ public class FavoriteServiceImpl implements FavoriteService {
                 .anime(anime)
                 .build();
 
-        Favorite saved = favoriteRepository.save(favorite);
-
-        return favoriteMapper.toResponse(saved);
+        return favoriteMapper.toResponse(favoriteRepository.save(favorite));
     }
 
     @Override
-    public void removeFavorite(Long userId, Long animeId) {
+    public void removeFavorite(Long animeId) {
 
-        User user = userRepository.findById(userId)
-                .orElseThrow(UserNotFoundException::new);
+        Long currentUserId = SecurityUtils.currentUserId();
 
-        Anime anime = animeRepository.findById(animeId)
-                .orElseThrow(() -> new AnimeNotFoundException(animeId));
+        Favorite favorite = favoriteRepository.findByUserIdAndAnimeId(currentUserId, animeId)
+                        .orElseThrow(() -> new FavoriteNotFoundException(animeId));
 
-        Favorite favorite = favoriteRepository.findByUserAndAnime(user, anime)
-                .orElseThrow(() -> new FavoriteNotFoundException(animeId));
+        boolean isOwner = favorite.getUser().getId().equals(currentUserId);
+
+        boolean canDeleteAny = SecurityUtils.hasPermission(PermissionType.FAVORITE_DELETE_ANY);
+
+        if (!isOwner && !canDeleteAny) {
+            throw new FavoriteForbiddenException();
+        }
 
         favoriteRepository.delete(favorite);
     }
@@ -72,10 +79,11 @@ public class FavoriteServiceImpl implements FavoriteService {
     @Transactional(readOnly = true)
     public List<FavoriteResponse> getUserFavorites(Long userId) {
 
-        User user = userRepository.findById(userId)
-                .orElseThrow(UserNotFoundException::new);
+        if (!userRepository.existsById(userId)) {
+            throw new UserNotFoundException();
+        }
 
-        return favoriteRepository.findByUser(user)
+        return favoriteRepository.findByUserId(userId)
                 .stream()
                 .map(favoriteMapper::toResponse)
                 .toList();
