@@ -11,5 +11,6 @@ public enum PermissionType {
     COMMENT_DELETE_OWN,
 
     FAVORITE_ADD,
-    FAVORITE_REMOVE
+    FAVORITE_DELETE_OWN,
+    FAVORITE_DELETE_ANY,
 }

@@ -12,6 +12,8 @@ import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Component
 @RequiredArgsConstructor
@@ -31,24 +33,34 @@ public class PermissionBootstrapRunner implements CommandLineRunner {
                     ));
         }
 
-        Set<Permission> userPermissions = Set.of(
-                permissionRepository.findByName(PermissionType.COMMENT_CREATE.name()).orElseThrow(),
-                permissionRepository.findByName(PermissionType.COMMENT_DELETE_OWN.name()).orElseThrow(),
-                permissionRepository.findByName(PermissionType.FAVORITE_ADD.name()).orElseThrow()
-        );
+        Set<Permission> userPermissions = Stream.of(
+                    PermissionType.COMMENT_CREATE,
+                    PermissionType.COMMENT_DELETE_OWN,
+                    PermissionType.FAVORITE_ADD,
+                    PermissionType.FAVORITE_DELETE_OWN
+                )
+                .map(this::getPermission)
+                .collect(Collectors.toSet());
 
-        createRoleIfNotFound(RoleType.ROLE_USER.name(), userPermissions);
+        createOrUpdateRole(RoleType.ROLE_USER, userPermissions);
 
         Set<Permission> allPermissions = Set.copyOf(permissionRepository.findAll());
 
-        createRoleIfNotFound(RoleType.ROLE_ADMIN.name(), allPermissions);
+        createOrUpdateRole(RoleType.ROLE_ADMIN, allPermissions);
     }
 
-    private void createRoleIfNotFound(String roleName, Set<Permission> permissions) {
-        Role role = roleRepository.findByName(roleName)
-                .orElse(Role.builder().name(roleName).build());
+    private void createOrUpdateRole(RoleType roleType, Set<Permission> permissions) {
+
+        Role role = roleRepository.findByName(roleType.name())
+                .orElse(Role.builder().name(roleType.name()).build());
 
         role.setPermissions(permissions);
         roleRepository.save(role);
+    }
+
+    private Permission getPermission(PermissionType type) {
+        return permissionRepository.findByName(type.name())
+                .orElseThrow(() ->
+                        new IllegalStateException("Permission not found: " + type.name()));
     }
 }
