@@ -27,6 +27,10 @@ public enum ErrorMessage {
 
     USER_NOT_FOUND("User not found with id: %d"),
 
+    ROLE_NOT_FOUND("Role not found: %s"),
+    USER_NOT_AUTHENTICATED("User not authenticated"),
+    INVALID_PRINCIPAL_TYPE("Invalid principal type"),
+
     GENRE_ALREADY_EXISTS("Genre already exists with the name: %s"),
     GENRE_NOT_FOUND("Genre not found with id: %d");
 

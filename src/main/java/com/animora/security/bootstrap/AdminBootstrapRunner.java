@@ -42,8 +42,7 @@ public class AdminBootstrapRunner implements CommandLineRunner {
     @Override
     public void run(String... args) {
 
-        Role adminRole = roleRepository.findByName(RoleType.ROLE_ADMIN.name())
-                .orElseThrow(() -> new RuntimeException("ROLE_ADMIN not found"));
+        Role adminRole = getRequiredRole();
 
         if(userRepository.existsByEmail(adminEmail)) {
             return;
@@ -58,5 +57,13 @@ public class AdminBootstrapRunner implements CommandLineRunner {
                 .build();
 
         userRepository.save(admin);
+    }
+
+    private Role getRequiredRole() {
+        return roleRepository.findByName(RoleType.ROLE_ADMIN.name())
+                .orElseThrow(() ->
+                        new IllegalStateException(
+                                RoleType.ROLE_ADMIN.name() + " not initialized during bootstrap phase"
+                        ));
     }
 }

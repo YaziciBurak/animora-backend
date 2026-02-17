@@ -20,7 +20,7 @@ public class GenreController {
     private final GenreService genreService;
 
     @PostMapping
-    @PreAuthorize("hasAuthority('ANIME_CREATE')")
+    @PreAuthorize("hasAuthority('GENRE_CREATE')")
     public ResponseEntity<GenreResponse> createGenre(@Valid @RequestBody GenreRequest request) {
         return ResponseEntity.ok(genreService.createGenre(request));
     }
@@ -36,7 +36,7 @@ public class GenreController {
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasAuthority('ANIME_UPDATE')")
+    @PreAuthorize("hasAuthority('GENRE_UPDATE')")
     public ResponseEntity<GenreResponse> updateGenre(
             @PathVariable Long id,
             @Valid @RequestBody GenreRequest request
@@ -45,7 +45,7 @@ public class GenreController {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAuthority('ANIME_DELETE')")
+    @PreAuthorize("hasAuthority('GENRE_DELETE')")
     public ResponseEntity<Void> deleteGenre(@PathVariable Long id) {
         genreService.deleteGenre(id);
         return ResponseEntity.noContent().build();

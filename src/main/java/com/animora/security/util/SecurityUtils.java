@@ -1,5 +1,7 @@
 package com.animora.security.util;
 
+import com.animora.security.exception.InvalidPrincipalException;
+import com.animora.security.exception.UserNotAuthenticatedException;
 import com.animora.security.permission.PermissionType;
 import com.animora.security.permission.RoleType;
 import com.animora.security.userdetails.CustomUserDetails;
@@ -15,7 +17,7 @@ public final class SecurityUtils {
                 .getAuthentication();
 
         if (authentication == null || !authentication.isAuthenticated()) {
-            throw new IllegalStateException("User not authenticated");
+            throw new UserNotAuthenticatedException();
         }
 
         Object principal = authentication.getPrincipal();
@@ -24,7 +26,7 @@ public final class SecurityUtils {
             return userDetails.getId();
         }
 
-        throw new IllegalStateException("Invalid principal type");
+        throw new InvalidPrincipalException();
     }
 
     public static String currentUserEmail() {

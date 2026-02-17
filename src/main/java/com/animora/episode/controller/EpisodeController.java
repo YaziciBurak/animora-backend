@@ -22,7 +22,7 @@ public class EpisodeController {
     private final EpisodeService episodeService;
 
     @PostMapping
-    @PreAuthorize("hasAuthority('ANIME_CREATE')")
+    @PreAuthorize("hasAuthority('EPISODE_CREATE')")
     public ResponseEntity<EpisodeResponse> createEpisode(
             @PathVariable Long seasonId,
             @Valid @RequestBody EpisodeRequest request
@@ -47,7 +47,7 @@ public class EpisodeController {
     }
 
     @PutMapping("/{episodeId}")
-    @PreAuthorize("hasAuthority('ANIME_UPDATE')")
+    @PreAuthorize("hasAuthority(EPISODE_UPDATE')")
     public ResponseEntity<EpisodeResponse> updateEpisode(
             @PathVariable Long seasonId,
             @PathVariable Long episodeId,
@@ -59,7 +59,7 @@ public class EpisodeController {
     }
 
     @DeleteMapping("/{episodeId}")
-    @PreAuthorize("hasAuthority('ANIME_DELETE')")
+    @PreAuthorize("hasAuthority('EPISODE_DELETE')")
     public ResponseEntity<Void> deleteEpisode(@PathVariable Long seasonId,
                                               @PathVariable Long episodeId) {
         episodeService.deleteEpisode(seasonId, episodeId);

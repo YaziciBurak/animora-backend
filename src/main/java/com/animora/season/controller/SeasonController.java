@@ -11,6 +11,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -22,6 +23,7 @@ public class SeasonController {
     private final SeasonService seasonService;
 
     @PostMapping
+    @PreAuthorize("hasAuthority('SEASON_CREATE')")
     public ResponseEntity<SeasonResponse> createSeason(
             @PathVariable Long animeId,
             @Valid @RequestBody SeasonRequest request
@@ -43,6 +45,7 @@ public class SeasonController {
     }
 
     @PutMapping("/{seasonId}")
+    @PreAuthorize("hasAuthority('SEASON_UPDATE')")
     public ResponseEntity<SeasonResponse> updateSeason(
             @PathVariable Long animeId,
             @PathVariable Long seasonId,
@@ -53,6 +56,7 @@ public class SeasonController {
     }
 
     @DeleteMapping("/{seasonId}")
+    @PreAuthorize("hasAuthority('SEASON_DELETE')")
     public ResponseEntity<Void> deleteSeason (
             @PathVariable Long animeId,
             @PathVariable Long seasonId
