@@ -61,6 +61,6 @@ public class PermissionBootstrapRunner implements CommandLineRunner {
     private Permission getPermission(PermissionType type) {
         return permissionRepository.findByName(type.name())
                 .orElseThrow(() ->
-                        new IllegalStateException("Permission not found: " + type.name()));
+                        new IllegalStateException("Permission initialization failed for: " + type.name()));
     }
 }
