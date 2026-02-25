@@ -5,6 +5,7 @@ import com.animora.anime.dto.AnimeResponse;
 import com.animora.anime.entity.Anime;
 import com.animora.anime.exception.AnimeAlreadyExistsException;
 import com.animora.anime.exception.AnimeHasSeasonsException;
+import com.animora.anime.exception.AnimeNotFoundException;
 import com.animora.anime.mapper.AnimeMapper;
 import com.animora.anime.repository.AnimeRepository;
 import com.animora.anime.service.impl.AnimeServiceImpl;
@@ -26,7 +27,7 @@ import static org.mockito.Mockito.*;
 
 
 @ExtendWith(MockitoExtension.class)
-public class AnimeServiceImplTest {
+class AnimeServiceImplTest {
 
     @Mock
     private AnimeRepository animeRepository;
@@ -161,5 +162,21 @@ public class AnimeServiceImplTest {
 
         assertThrows(AnimeHasSeasonsException.class,
                 () -> animeService.deleteAnime(1L));
+    }
+
+    @Test
+    void getAnimeById_whenNotFound_throwException() {
+        when(animeRepository.findById(1L)).thenReturn(Optional.empty());
+
+        assertThrows(AnimeNotFoundException.class,
+                () -> animeService.getAnimeById(1L));
+    }
+
+    @Test
+    void updateAnime_whenNotFound_throwException() {
+        when(animeRepository.findById(1L)).thenReturn(Optional.empty());
+
+        assertThrows(AnimeNotFoundException.class,
+                () -> animeService.updateAnime(1L, request));
     }
 }
