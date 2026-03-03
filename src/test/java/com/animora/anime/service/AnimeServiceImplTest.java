@@ -165,6 +165,14 @@ class AnimeServiceImplTest {
     }
 
     @Test
+    void deleteAnime_whenNotFound_throwException() {
+        when(animeRepository.findById(1L)).thenReturn(Optional.empty());
+
+        assertThrows(AnimeNotFoundException.class,
+                () -> animeService.deleteAnime(1L));
+    }
+
+    @Test
     void getAnimeById_whenNotFound_throwException() {
         when(animeRepository.findById(1L)).thenReturn(Optional.empty());
 

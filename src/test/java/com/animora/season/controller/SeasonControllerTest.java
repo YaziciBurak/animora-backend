@@ -1,7 +1,6 @@
-package com.animora.season;
+package com.animora.season.controller;
 
 import com.animora.common.pagination.PageResponse;
-import com.animora.season.controller.SeasonController;
 import com.animora.season.dto.SeasonRequest;
 import com.animora.season.dto.SeasonResponse;
 import com.animora.season.service.SeasonService;
