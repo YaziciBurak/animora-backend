@@ -15,6 +15,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -71,7 +72,7 @@ class SeasonControllerTest {
                 .thenReturn(response);
 
         mockMvc.perform(post("/api/animes/1/seasons").with(csrf())
-                .contentType("application/json")
+                .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.seasonNumber").value(1))
@@ -88,7 +89,7 @@ class SeasonControllerTest {
                 .build();
 
         mockMvc.perform(post("/api/animes/1/seasons")
-                .contentType("application/json")
+                .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isForbidden());
     }
@@ -141,7 +142,7 @@ class SeasonControllerTest {
                 .thenReturn(response);
 
         mockMvc.perform(put("/api/animes/1/seasons/1").with(csrf())
-                .contentType("application/json")
+                .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.seasonNumber").value(2));

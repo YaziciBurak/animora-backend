@@ -47,7 +47,7 @@ public class EpisodeController {
     }
 
     @PutMapping("/{episodeId}")
-    @PreAuthorize("hasAuthority(EPISODE_UPDATE')")
+    @PreAuthorize("hasAuthority('EPISODE_UPDATE')")
     public ResponseEntity<EpisodeResponse> updateEpisode(
             @PathVariable Long seasonId,
             @PathVariable Long episodeId,
