@@ -24,6 +24,7 @@ public class CommentMapper {
                 .content(comment.getContent())
                 .userId(comment.getUser().getId())
                 .userName(comment.getUser().getUsername())
+                .createdAt(comment.getCreatedAt())
                 .build();
     }
 }

@@ -25,7 +25,7 @@ public enum ErrorMessage {
     FAVORITE_ALREADY_EXISTS("Anime already in favorites. userId: %d, animeId: %d"),
     FAVORITE_FORBIDDEN("You are not allowed to perform this action on favorite"),
 
-    USER_NOT_FOUND("User not found with id: %d"),
+    USER_NOT_FOUND("User not found"),
 
     ROLE_NOT_FOUND("Role not found: %s"),
     USER_NOT_AUTHENTICATED("User not authenticated"),
