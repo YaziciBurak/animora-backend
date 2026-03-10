@@ -12,7 +12,6 @@ public class UserNotFoundException extends BusinessException {
                 HttpStatus.NOT_FOUND,
                 ErrorCode.USER_NOT_FOUND,
                 ErrorMessage.USER_NOT_FOUND
-
         );
     }
 }
