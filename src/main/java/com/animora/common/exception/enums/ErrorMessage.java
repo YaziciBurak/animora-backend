@@ -21,7 +21,7 @@ public enum ErrorMessage {
     COMMENT_NOT_FOUND("Comment not found with id: %d"),
     FORBIDDEN_COMMENT_DELETE("You are not allowed to delete this comment"),
 
-    FAVORITE_NOT_FOUND("Favorite not found for user id: %d and anime id: %d"),
+    FAVORITE_NOT_FOUND("Favorite not found for user"),
     FAVORITE_ALREADY_EXISTS("Anime already in favorites. userId: %d, animeId: %d"),
     FAVORITE_FORBIDDEN("You are not allowed to perform this action on favorite"),
 
